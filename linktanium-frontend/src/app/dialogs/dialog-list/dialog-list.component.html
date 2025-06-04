@@ -1,0 +1,9 @@
+<div
+   class="dialog-scrollable-content"
+   [ngStyle]="{ 'background-color': groupBackgroundColor }"
+   style="display: flex; flex-direction: column; height: 100%;"
+   >
+   <div style="flex-grow: 1; overflow-y: auto;">
+      <app-ui-list-embed [list]="data.list" (listAdded)="onListAdded()"></app-ui-list-embed>
+   </div>
+</div>

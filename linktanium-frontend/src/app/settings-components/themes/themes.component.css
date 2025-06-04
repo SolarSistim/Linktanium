@@ -1,0 +1,46 @@
+.button-panel {
+	background-color: #3b4d59;
+	padding: 15px;
+	border-radius: 3px;
+}
+
+.nav-button {
+	background-color: #2e3a46;
+	text-align: left;
+	color: white;
+}
+
+.nav-button-disabled {
+	background-color: #2e3a46;
+	text-align: left;
+	color: gray;
+}
+
+.upload-button {
+	background-color: #3b4d59;
+	text-align: left;
+	color: white;
+	margin-right: 10px;
+}
+
+.hex-output-field {
+	width: 163px;
+}
+
+.color-picker-field {
+	position: relative;
+	margin-right: 10px;
+	height: 40px;
+	width: 40px;
+	border: 2px solid white;
+	border-radius: 20px;
+	cursor: pointer;
+}
+
+.image-item img {
+	max-width: 200px;
+	width: auto;
+	height: auto;
+	border-radius: 8px;
+	object-fit: contain;
+}

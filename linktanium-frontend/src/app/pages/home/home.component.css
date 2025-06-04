@@ -1,0 +1,9 @@
+.top-left-icon {
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	font-size: 24px;
+	color: white;
+	cursor: pointer;
+	z-index: 9999;
+}

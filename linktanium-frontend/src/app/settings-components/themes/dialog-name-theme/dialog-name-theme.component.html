@@ -1,0 +1,22 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100%; position: relative; padding-top: 0px;">
+   <h3 mat-dialog-title class="custom-dialog-header">Name Your Theme</h3>
+   <i class="bi bi-x-lg close-icon" title="Close" (click)="cancel()"></i>
+   <form>
+      <div class="input-group mb-3" style="margin-bottom: 0px;">
+         <input
+         autocomplete="off"
+         type="text"
+         class="form-control"
+         name="themeName"
+         placeholder="Enter theme name"
+         [(ngModel)]="themeName"
+         />
+      </div>
+   </form>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between m-2 custom-mat-dialog-actions">
+   <button mat-button color="warn" (click)="cancel()">Cancel</button>
+   <button mat-button color="primary" (click)="submit()" [disabled]="!themeName.trim()">
+   Save
+   </button>
+</mat-dialog-actions>

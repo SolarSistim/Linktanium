@@ -1,0 +1,20 @@
+<mat-dialog-content class="dialog-content">
+   <div class="dialog-header">
+      <h3 class="custom-dialog-header">
+         <i class="bi bi-image"></i> Background Images
+      </h3>
+      <i class="bi bi-x-lg close-icon" title="Close" (click)="closeDialog()"></i>
+   </div>
+   <div class="image-grid-scroll">
+      <div class="image-grid">
+         <div *ngFor="let img of images" class="image-item" (click)="selectImage(img.filename)">
+         <img [src]="getBackgroundUrl(img)" [alt]="img.filename" />
+         <div class="filename">{{ img.filename }} 
+            <i class="bi bi-trash me-2" (click)="confirmDelete(img.filename, $event)" 
+               style="cursor: pointer; position: relative; bottom: -2px;"></i>
+         </div>
+      </div>
+   </div>
+   </div>
+   <h4 *ngIf="this.images.length == 0" style="padding: 25px; padding-top: 0px;">No images uploaded. Click the Upload button on the Theme tab to upload a background image.</h4>
+</mat-dialog-content>

@@ -1,0 +1,22 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100%; position: relative;">
+   <h3 mat-dialog-title class="pb-2">Edit Group</h3>
+   <i class="bi bi-x-lg close-icon" title="Close" (click)="cancel()"></i>
+   <mat-form-field appearance="fill" class="mt-2 mb-4" style="width: 100%;">
+      <mat-label>Group Name</mat-label>
+      <input
+      matInput
+      autocomplete="off"
+      type="text"
+      [(ngModel)]="group.name"
+      placeholder="Group Name"
+      />
+   </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions style="margin: 0 8px 8px 8px; width: 100%;">
+   <button mat-button color="warn" (click)="cancel()" [disabled]="isUnchanged" style="margin-right: auto;">
+   Cancel
+   </button>
+   <button mat-button color="primary" (click)="save()" [disabled]="isUnchanged">
+   Save & Close
+   </button>
+</mat-dialog-actions>

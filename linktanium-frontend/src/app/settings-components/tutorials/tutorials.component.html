@@ -1,0 +1,28 @@
+<h3 mat-dialog-title class="pb-2"><i class="bi bi-info-circle"></i> Tutorials</h3>
+<div class="container">
+   <div class="mat-card button-panel mt-2 mb-1">
+      <div class="row">
+         <div class="col-lg-6 d-flex align-items-center">
+         </div>
+         <div class="col-lg-6 text-end">
+            <ng-container>
+               <button mat-button class="nav-button" style="color: white;" (click)="disableAll()">
+               <i class="bi bi-x-lg"></i>&nbsp;Disable All In-App Tutorials
+               </button>
+               <button mat-button class="nav-button" style="color: white;" (click)="enableAll()">
+               <i class="bi bi-check-lg"></i>&nbsp;Enable All Tutorials
+               </button>
+            </ng-container>
+         </div>
+      </div>
+   </div>
+   <app-tutorial-crash-course [isSettingsComponent]="true"></app-tutorial-crash-course>
+   <app-tutorial-search-bar [isSettingsComponent]="true"></app-tutorial-search-bar>
+   <app-tutorial-a-note-on-imports [isSettingsComponent]="true"></app-tutorial-a-note-on-imports>
+   <app-tutorial-customizing-your-theme [isSettingsComponent]="true"></app-tutorial-customizing-your-theme>
+   <app-tutorial-note-on-icons [isSettingsComponent]="true"></app-tutorial-note-on-icons>
+   <app-tutorial-icon-producer [isSettingsComponent]="true"></app-tutorial-icon-producer>
+   <app-tutorial-multi-icon-uploader [isSettingsComponent]="true"></app-tutorial-multi-icon-uploader>
+   <app-tutorial-list [isSettingsComponent]="true"></app-tutorial-list>
+</div>
+<app-ui-status></app-ui-status>

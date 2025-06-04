@@ -1,0 +1,81 @@
+.custom-container {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+}
+
+.example-is-mobile .example-toolbar {
+	position: fixed;
+	z-index: 2;
+}
+
+h1.example-app-name {
+	margin-left: 8px;
+	font-size: 20px;
+}
+
+.custom-toolbar {
+	background-color: #2e3a46 !important;
+	color: white;
+}
+
+mat-sidenav {
+	background-color: #2e3a46;
+	width: 250px !important;
+	color: white;
+}
+
+mat-sidenav-content {
+	padding: 1rem;
+	color: white;
+}
+
+.custom-sidenav-container {
+	background-color: #212529 !important;
+	flex: 1;
+}
+
+.example-is-mobile .custom-sidenav-container {
+	flex: 1 0 auto;
+}
+
+.nav-button {
+	width: 100%;
+	justify-content: flex-start;
+	text-align: left;
+	background-color: #3b4d59 !important;
+	color: white !important;
+	transition: background-color 0.2s ease;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.nav-button:hover {
+	background-color: #3b4d59 !important;
+	color: white !important;
+}
+
+.custom-icon {
+	position: relative !important;
+	bottom: -1px;
+	margin-left: 10px;
+}
+
+.custom-button-text {
+	position: relative;
+	margin-left: 15px;
+}
+
+.nav-button.active {
+	background-color: #4c6170 !important;
+}
+
+.nav-button.active {
+	background-color: #4c6170 !important;
+	border-left: 4px solid #00bcd4;
+}

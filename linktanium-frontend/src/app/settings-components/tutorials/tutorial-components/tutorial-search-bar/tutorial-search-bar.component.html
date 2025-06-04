@@ -1,0 +1,31 @@
+<div *ngIf="showTutorial || !showTutorial && isSettingsComponent" class="alert alert-info fade show mt-3" role="alert">
+   <h4 class="alert-heading"><i class="bi bi-info-circle"></i> Using Linktanium's Search Bar</h4>
+   <p>
+      You can configure Linktanium search feature to work with any search engine that supports URL-based searches. Linktanium will automatically append your search terms to the end of the URL you provide.
+   </p>
+   <p>
+      Go to the search engine you want to use, perform a sample search, then in the address bar, copy the full URL up to (but not including) your actual search terms. Then paste that URL into the "URL Query" field, then click save, and Linktanium will take care of the rest.
+   </p>
+   <p>
+      Examples:
+   </p>
+   <ul>
+      <li><b>Google</b>: https://www.google.com/search?q=</li>
+      <li><b>Duckduckgo</b>: https://duckduckgo.com/?t=h_&q=</li>
+      <li><b>Yahoo</b>: https://search.yahoo.com/search?p=</li>
+   </ul>
+   <p
+      class="mb-0 d-flex justify-content-between align-items-center"
+      *ngIf="!isSettingsComponent"
+      >
+      <span>&nbsp;</span>
+      <span class="button-group ms-3">
+      <button mat-stroked-button style="margin-right: 10px;" (click)="dismissTutorial()">
+      <i class="bi bi-x-lg"></i> Don’t Show Again
+      </button>
+      <button type="button" mat-stroked-button (click)="showTutorial = false">
+      <i class="bi bi-caret-down"></i> Hide
+      </button>
+      </span>
+   </p>
+</div>

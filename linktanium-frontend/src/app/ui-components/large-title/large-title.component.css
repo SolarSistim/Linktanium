@@ -1,0 +1,14 @@
+.title-panel {
+    background-color: #2e3a46;
+    padding: 15px;
+    border-radius: 3px;
+  }
+
+.title-panel > h3 {
+    margin-bottom: 0px;
+}
+
+.bi {
+  position: relative;
+  bottom: -2px;
+}

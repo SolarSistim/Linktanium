@@ -1,0 +1,28 @@
+<div *ngIf="showTutorial || !showTutorial && isSettingsComponent" class="alert alert-info fade show mt-3" role="alert">
+   <h4 class="alert-heading">
+      <i class="bi bi-info-circle"></i> About the Lists Feature
+   </h4>
+   <p>
+      Use the list feature to track lists of just about anything that you can think of. Create, prioritize, categorize and pin them to the top.
+   </p>
+   <p>
+      Click & drag to reorder them within their parent category, or drag them to another category, them complete your list and review the list of completed items.
+   </p>
+   <p>
+      Use the Filter feature to filter your lists for specific items and filter by Name, Description and Category, or filter by all.
+   </p>
+   <p
+      class="mb-0 d-flex justify-content-between align-items-center"
+      *ngIf="!isSettingsComponent"
+      >
+      <span>&nbsp;</span>
+      <span class="button-group ms-3">
+      <button mat-stroked-button style="margin-right: 10px;" (click)="dismissTutorial()">
+      <i class="bi bi-x-lg"></i> Don’t Show Again
+      </button>
+      <button type="button" mat-stroked-button (click)="showTutorial = false">
+      <i class="bi bi-caret-down"></i> Hide
+      </button>
+      </span>
+   </p>
+</div>

@@ -1,0 +1,99 @@
+<h3 mat-dialog-title class="pb-2"><i class="bi bi-box-arrow-right"></i> Import/Export</h3>
+<div class="container">
+<app-small-title title="Export"></app-small-title>
+<p>
+   The export feature enables you to back up all essential configuration data and visual assets from your current Linktanium installation into a single downloadable <strong>.ZIP</strong> file. This file acts as a comprehensive snapshot of Linktanium's state, allowing you to transfer your setup easily.
+</p>
+<p>
+   This is especially useful when migrating to a new environment, sharing configurations with others, or restoring from a backup. All exported content is organized within the ZIP archive for easy reference and later import.
+</p>
+<p>
+   The export includes the following key components:
+</p>
+<div class="row">
+   <div class="col-lg-6">
+      <b>Database Tables:</b>
+      <ul>
+         <li>BACKGROUND_IMAGES</li>
+         <li>LINKS</li>
+         <li>LINK_CATEGORIES</li>
+         <li>LINK_GROUPS</li>
+         <li>THEMES</li>
+         <li>LIST</li>
+         <li>LIST_ITEM_CATEGORY</li>
+         <li>LIST_ITEM</li>
+         <li>ICONS</li>
+      </ul>
+   </div>
+   <div class="col-lg-6">
+      <b>Images:</b>
+      <ul>
+         <li>Favicon</li>
+         <li>Logo</li>
+         <li>Icons</li>
+         <li>Background images</li>
+      </ul>
+   </div>
+</div>
+<div class="mat-card button-panel mt-2 mb-1">
+   <div class="row">
+      <div class="col-lg-6 d-flex align-items-center">
+      </div>
+      <div class="col-lg-6 text-end">
+         <ng-container>
+            <button mat-button class="green-nav-button" (click)="exportData()">
+               <ng-container *ngIf="!loading; else spinner">
+                  <i class="bi bi-check-lg"></i>&nbsp;Export All Settings
+               </ng-container>
+               <ng-template #spinner>
+                  <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+               </ng-template>
+            </button>
+         </ng-container>
+      </div>
+   </div>
+</div>
+<app-small-title title="Import"></app-small-title>
+<app-tutorial-a-note-on-imports></app-tutorial-a-note-on-imports>
+<p>
+   <strong>Important:</strong> Importing a backup will <em>permanently erase</em> all current data, including your saved links, link groups, categories, themes, icons, favicons, logos, and background images. Once cleared, the system will automatically populate the database and restore all assets from the contents of the uploaded backup.
+</p>
+<p>
+   This is ideal for restoring a previous setup, migrating to a new instance, or cloning a configuration from another environment.
+</p>
+<div class="mat-card button-panel mt-2 mb-1">
+   <div class="row">
+      <div class="col-lg-6 d-flex align-items-center">
+         <div *ngIf="selectedFileName">Selected file: {{ selectedFileName }}</div>
+      </div>
+      <div class="col-lg-6 text-end">
+         <ng-container *ngIf="!selectedFileName">
+            <button mat-button class="orange-nav-button" [disabled]="importing" (click)="fileInput.click()">
+            <ng-container *ngIf="!importing; else spinnerImport">
+               <i class="bi bi-check-lg"></i>&nbsp;Select Backup File (.zip)
+            </ng-container>
+            <ng-template #spinnerImport>
+               <mat-spinner [diameter]="30" color="accent"></mat-spinner>
+            </ng-template>
+            </button>
+         </ng-container>
+         <ng-container *ngIf="selectedFileName">
+            <button mat-raised-button color="accent" [disabled]="importing" (click)="importSelectedFile()">
+            <ng-container *ngIf="!importing; else importSpinner">
+               <i class="bi bi-upload"></i>&nbsp;Import
+            </ng-container>
+            <ng-template #importSpinner>
+               <mat-spinner [diameter]="20" color="accent"></mat-spinner>
+            </ng-template>
+            </button>
+         </ng-container>
+      </div>
+   </div>
+</div>
+<input
+#fileInput
+type="file"
+hidden
+accept=".zip"
+(change)="onFileSelected($event)"
+/>

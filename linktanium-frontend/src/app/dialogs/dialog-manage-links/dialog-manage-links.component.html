@@ -1,0 +1,61 @@
+<div class="dialog-flex-container">
+   <mat-dialog-content class="dialog-content" style="padding-bottom: 0px;">
+      <h3 mat-dialog-title class="pb-2" *ngIf="!showGroupEditor">Manage Links</h3>
+      <h3 mat-dialog-title class="pb-2" *ngIf="showGroupEditor">Edit Group</h3>
+      <i class="bi bi-x-lg close-icon" title="Close" (click)="closeDialog()"></i>
+      <div class="row">
+         <div class="col-lg-6">
+            <mat-form-field appearance="fill" class="mb-2" style="width: 100%;">
+               <mat-label>Select Category</mat-label>
+               <mat-select [(ngModel)]="selectedCategoryId" (selectionChange)="onCategoryChange()">
+               <mat-option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</mat-option>
+               </mat-select>
+            </mat-form-field>
+         </div>
+         <div class="col-lg-6">
+            <mat-form-field appearance="fill" class="mb-3" style="width: 100%;">
+               <mat-label>Select Group</mat-label>
+               <mat-select [(ngModel)]="selectedGroupId" (ngModelChange)="selectedGroupId = +$event; onGroupChange()">
+               <mat-option *ngFor="let group of filteredGroups" [value]="group.id">{{ group.name }}</mat-option>
+               </mat-select>
+            </mat-form-field>
+         </div>
+      </div>
+      <div *ngIf="showGroupEditor">
+         <mat-form-field appearance="fill" class="mb-4" style="width: 100%;">
+            <mat-label>Group Name</mat-label>
+            <input matInput autocomplete="off" [(ngModel)]="groupName" placeholder="Group Name" />
+         </mat-form-field>
+      </div>
+      <div *ngIf="showAddForm" style="margin-bottom: 20px;">
+         <form (ngSubmit)="addLink()">
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+               <mat-form-field appearance="fill" style="flex: 1;">
+                  <mat-label>Display Name123</mat-label>
+                  <input matInput autocomplete="off" #linkNameInput name="newLinkName" [(ngModel)]="newLinkName" />
+               </mat-form-field>
+               <mat-form-field appearance="fill" style="flex: 1;">
+                  <mat-label>URL</mat-label>
+                  <input matInput autocomplete="off" name="newLinkUrl" [(ngModel)]="newLinkUrl" />
+               </mat-form-field>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+               <mat-form-field appearance="fill" style="flex: 1;">
+                  <mat-label>Link Description</mat-label>
+                  <input matInput autocomplete="off" name="newLinkDescription" [(ngModel)]="newLinkDescription" />
+               </mat-form-field>
+               <button mat-icon-button color="warn" type="button" (click)="cancelAddLink()">
+                  <mat-icon>close</mat-icon>
+               </button>
+               <button mat-raised-button color="primary" type="submit" [disabled]="!newLinkName.trim() || !newLinkUrl.trim()">
+               Add Link
+               </button>
+            </div>
+         </form>
+      </div>
+   </mat-dialog-content>
+   <mat-dialog-actions class="dialog-actions">
+      <button mat-button color="primary" (click)="saveChanges()" [disabled]="isUnchanged">Save</button>
+      <button mat-button color="primary" (click)="saveAndClose()" [disabled]="isUnchanged">Save & Close</button>
+   </mat-dialog-actions>
+</div>

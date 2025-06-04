@@ -1,0 +1,31 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100%; position: relative;">
+   <h3 mat-dialog-title class="pb-2">Add New Group</h3>
+   <i class="bi bi-x-lg close-icon" title="Close" (click)="cancel()"></i>
+   <mat-form-field appearance="fill" style="width: 100%; margin-top: 16px;">
+      <mat-label>Enter group name</mat-label>
+      <input
+      matInput
+      autocomplete="off"
+      type="text"
+      name="newGroupName"
+      [(ngModel)]="newGroupName"
+      (keydown.enter)="saveAndClose()"
+      />
+   </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions class="justify-content-end" style="margin-right: 8px; margin-left: 8px;">
+   <button 
+   mat-button 
+   color="primary" 
+   (click)="saveAndAdd()" 
+   [disabled]="!newGroupName.trim()">
+   Save & Add
+   </button>
+   <button 
+   mat-button 
+   color="primary" 
+   (click)="saveAndClose()" 
+   [disabled]="!newGroupName.trim()">
+   Save & Close
+   </button>
+</mat-dialog-actions>

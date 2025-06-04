@@ -1,0 +1,20 @@
+.button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .settings-button {
+    color: white !important;
+    transition: opacity 1.0s ease;
+  }
+  
+  .settings-button:hover {
+    opacity: 1;
+  }
+
+  .custom-settings-menu {
+    color: white;
+  }
+

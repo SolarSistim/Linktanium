@@ -1,0 +1,68 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100%; position: relative;">
+   <h3 mat-dialog-title class="pb-2">Manage Groups</h3>
+   <i class="bi bi-x-lg close-icon" title="Close" (click)="closeDialog()"></i>
+   <mat-form-field appearance="fill" class="mb-3">
+      <mat-label>Select Category</mat-label>
+      <mat-select [(ngModel)]="selectedCategoryId" (selectionChange)="onCategoryChange($event)">
+      <mat-option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</mat-option>
+      </mat-select>
+   </mat-form-field>
+   <div *ngIf="!showAddLinkGroup" class="mt-1 mb-3">
+      <span style="cursor: pointer;" (click)="showAddLinkGroup = true">&nbsp;[+] Add New Link Group</span>
+   </div>
+   <div *ngIf="showAddLinkGroup">
+      <form (ngSubmit)="addGroup()">
+         <div style="display: flex; align-items: center; gap: 8px;" class="mb-4">
+            <mat-form-field appearance="fill" style="flex: 1;">
+               <mat-label>New Link Group</mat-label>
+               <input
+               matInput
+               autocomplete="off"
+               id="addLinkGroup"
+               #groupInput
+               [(ngModel)]="newGroupName"
+               name="newGroupName"
+               placeholder="Add New Link Group"
+               />
+            </mat-form-field>
+            <button mat-icon-button color="warn" type="button" (click)="showAddLinkGroup = false; newGroupName = ''">
+               <mat-icon>close</mat-icon>
+            </button>
+            <button mat-raised-button color="primary" type="submit" [disabled]="!newGroupName.trim() || !selectedCategoryId">
+            Add
+            </button>
+         </div>
+      </form>
+   </div>
+   <div *ngIf="editableGroups.length === 0" class="text-muted mb-3 ps-1">
+      No groups yet. Click <strong>"Add New Link Group"</strong> to add one.
+   </div>
+   <div *ngFor="let group of editableGroups"
+   #groupRow
+   [attr.id]="'group-' + group.id"
+   cdkDrag 
+   class="category-row" 
+   style="align-items: center; display: flex; gap: 10px;"
+   [class.cdk-drag-animating]="true">
+   <span cdkDragHandle style="cursor: grab;">
+   <i class="bi bi-list" style="font-size: 1.2rem;"></i>
+   </span>
+   <div *ngIf="!group.isEditing" style="display: flex; align-items: center; width: 100%;">
+      <i class="bi bi-pencil" (click)="enableEdit(group)" style="cursor: pointer; margin-right: 8px;"></i>
+      <span>{{ group.name }}</span>
+      <span style="flex: 1 1 auto;"></span>
+      <i class="bi bi-x-lg" (click)="deleteGroup(group)" style="color: red; cursor: pointer;"></i>
+   </div>
+   <div *ngIf="group.isEditing" style="display: flex; align-items: center; gap: 8px;">
+      <mat-form-field appearance="fill" style="width: 280px;">
+         <mat-label>Edit Group Name</mat-label>
+         <input matInput type="text" autocomplete="off" [(ngModel)]="group.name" />
+      </mat-form-field>
+      <button mat-button color="warn" (click)="cancelEdit(group)">Cancel</button>
+      <button mat-raised-button color="primary" (click)="saveEdit(group)">Save</button>
+   </div>
+   </div>
+</mat-dialog-content>
+<mat-dialog-actions style="margin: 0 8px 8px 8px; width: 98%;">
+   <button mat-button color="primary" (click)="closeDialog()">Close</button>
+</mat-dialog-actions>

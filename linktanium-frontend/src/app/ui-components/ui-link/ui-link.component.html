@@ -1,0 +1,91 @@
+<div
+class="link-list"
+cdkDropList
+[cdkDropListData]="group.links"
+[cdkDropListConnectedTo]="getConnectedDropLists(category)"
+(cdkDropListDropped)="dropLink($event)"
+id="group-list-{{ group.id }}"
+[ngStyle]="{
+'background-color': linkStyles.backgroundColor,
+'color': linkStyles.fontColor,
+'font-weight': linkStyles.fontWeight,
+'font-size.px': linkStyles.fontSize,
+'border-color': linkStyles.borderColor,
+'border-style': 'solid',
+'border-width.px': linkStyles.borderWidth,
+'border-radius.px': linkStyles.borderRadius,
+}"
+>
+<div *ngIf="group.links.length === 0" class="empty-drop-placeholder">
+   <span>Drop link here or <span (click)="openAddLinkDialog()"><u style="cursor: pointer;">click here</u> to add new link.</span></span>
+</div>
+<div
+class="link-item"
+[class.handles-visible]="showHandles"
+[ngStyle]="{
+'background-color': linkStyles.backgroundColor,
+'color': linkStyles.fontColor,
+'font-weight': linkStyles.fontWeight,
+'font-size.px': linkStyles.fontSize,
+'border-radius.px': linkStyles.borderRadius,
+}"
+>
+<i
+*ngIf="showHandles"
+class="bi bi-list link-drag-handle"
+cdkDrag
+[class.handles-visible]="showHandles"
+[cdkDragData]="link"
+[cdkDragDisabled]="isLinkDraggable"
+title="Drag link"
+></i>
+<a
+[href]="link.url"
+target="_blank"
+rel="noopener noreferrer"
+(click)="onAnchorClick($event)"
+class="link-anchor"
+[title]="link.url"
+>
+<img
+class="link-icon"
+(click)="openLink(link.url)"
+[alt]="link.name || 'Link Icon'"
+[title]="'Description: ' + (link.description ? link.description : 'No description') + ' | Link Name: ' + link.name"
+(auxclick)="handleAuxClick($event, link.url)"
+[src]="'/assets/icons/' + (link.icon || 'default.png')"
+(error)="onImageError($event)"
+style="cursor: grab !important;"
+/>
+</a>
+<div
+class="link-name-container"
+(click)="openLink(link.url)"
+(auxclick)="handleAuxClick($event, link.url)"
+[title]="'Description: ' + (link.description ? link.description : 'No description') + ' | Link Name: ' + link.name"
+style="cursor: pointer;"
+>
+<a
+[href]="link.url"
+target="_blank"
+rel="noopener noreferrer"
+(click)="onAnchorClick($event)"
+class="link-name-container"
+>
+<span class="link-hover">{{ link.name }}</span>
+</a>
+</div>
+<i class="bi bi-three-dots-vertical link-menu-icon" [matMenuTriggerFor]="linkMenu"></i>
+<mat-menu #linkMenu="matMenu">
+   <button mat-menu-item (click)="editLink(link)">
+   <i class="bi bi-pen"></i> Edit Link
+   </button>
+   <button mat-menu-item (click)="openManageLinksDialog()">
+   <i class="bi bi-sliders"></i> Link Manager
+   </button>
+   <button mat-menu-item (click)="deleteLink(link)">
+   <i class="bi bi-x-lg"></i> Delete Link
+   </button>
+</mat-menu>
+</div>
+</div>

@@ -1,0 +1,26 @@
+<div *ngIf="showTutorial || !showTutorial && isSettingsComponent" class="alert alert-info fade show mt-3" role="alert">
+   <h4 class="alert-heading">
+      <i class="bi bi-info-circle"></i> Uploading Multiple Icons
+   </h4>
+   <p>
+      Use the Multi Icon Uploader to upload many icons at one time.<br/><br/>
+      <i>Icons must be in .png format.</i>
+   </p>
+   <p>
+      If you have icons that have already been uploaded that are mixed in with icons that aren't uploaded yet, just select them all and Linktanium will differentiate between existing icons and new icons automatically.
+   </p>
+   <p
+      class="mb-0 d-flex justify-content-between align-items-center"
+      *ngIf="!isSettingsComponent"
+      >
+      <span>&nbsp;</span>
+      <span class="button-group ms-3">
+      <button mat-stroked-button style="margin-right: 10px;" (click)="dismissTutorial()">
+      <i class="bi bi-x-lg"></i> Don’t Show Again
+      </button>
+      <button type="button" mat-stroked-button (click)="showTutorial = false">
+      <i class="bi bi-caret-down"></i> Hide
+      </button>
+      </span>
+   </p>
+</div>

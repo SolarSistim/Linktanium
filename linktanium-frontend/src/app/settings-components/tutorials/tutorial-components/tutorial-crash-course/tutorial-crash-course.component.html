@@ -1,0 +1,26 @@
+<div *ngIf="showTutorial || !showTutorial && isSettingsComponent" class="alert alert-info fade show mt-3" role="alert">
+   <h4 class="alert-heading"><i class="bi bi-info-circle"></i> Here's a Quick Crash Course</h4>
+   <p>
+      This will be your main operating area. From this page you can add <b>Categories</b>, <b>Link Groups</b>, and <b>Links</b>. Within link groups, links can drag-and-drop within the same group, or to other groups. To drag a link, click the &nbsp;<i class="bi bi-arrows-move"></i> &nbsp;icon on the bottom group toolbar, which will enable drag-and-drop. Then use the drag handle to drag the link to where you want it. Using the same feature, you can drag entire groups to different locations under the same category.
+   </p>
+   <p>
+      To move a group to another category, click the <i class="bi bi-three-dots-vertical"></i> menu at the top right of the group, then go to <i class="bi bi-send"></i> <b> Move Group</b>, then select the <i class="bi bi-box-seam"></i> <b> Category</b> you want to move the group to. Other useful features can be accessed from the many <i class="bi bi-three-dots-vertical"></i> menus available.
+   </p>
+   <p>
+      To access Linktanium's settings, click the <i class="bi bi-sliders"></i> &nbsp;button found below the groups area. Other quick start tutorials can be found there.
+   </p>
+   <p
+      class="mb-0 d-flex justify-content-between align-items-center"
+      *ngIf="!isSettingsComponent"
+      >
+      <span>&nbsp;</span>
+      <span class="button-group ms-3">
+      <button mat-stroked-button style="margin-right: 10px;" (click)="dismissTutorial()">
+      <i class="bi bi-x-lg"></i> Don’t Show Again
+      </button>
+      <button type="button" mat-stroked-button (click)="showTutorial = false">
+      <i class="bi bi-caret-down"></i> Hide
+      </button>
+      </span>
+   </p>
+</div>

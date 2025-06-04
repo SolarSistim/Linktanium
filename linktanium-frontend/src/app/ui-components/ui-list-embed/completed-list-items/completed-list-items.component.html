@@ -1,0 +1,58 @@
+<div style="padding: 16px;">
+   <div *ngIf="loading" style="color: white;">Loading completed items...</div>
+   <div *ngIf="!loading" class="row mb-3">
+      <div class="col-md-8">
+         <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Filter by completed item name</mat-label>
+            <input matInput placeholder="Start typing" [(ngModel)]="filterText" />
+            <button
+            *ngIf="filterText"
+            mat-icon-button
+            matSuffix
+            aria-label="Clear"
+            (click)="filterText = ''"
+            >
+            <mat-icon>close</mat-icon>
+            </button>
+         </mat-form-field>
+      </div>
+      <div class="col-md-4">
+         <mat-form-field appearance="fill" class="w-100">
+            <mat-label>Sort completed items</mat-label>
+            <mat-select [(ngModel)]="selectedSortOption">
+            <mat-option value="date-desc">Date Descending</mat-option>
+            <mat-option value="date-asc">Date Ascending</mat-option>
+            <mat-option value="title-asc">Alphabetically A-Z</mat-option>
+            <mat-option value="title-desc">Alphabetically Z-A</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+      <app-indicator-glow text="Filtering..." class="mt-3 text-light" *ngIf="isFiltering"></app-indicator-glow>
+   </div>
+   <div *ngIf="!loading && items.length === 0" style="color: white;">
+      No completed items found.
+   </div>
+   <div *ngIf="!loading && filteredItems.length > 0">
+      <div *ngFor="let item of filteredItems; let i = index" class="completed-item"
+         style="border: 1px dashed #ccc; padding: 8px; margin-bottom: 12px; border-radius: 6px; background-color: rgba(255,255,255,0.05); color: white;">
+         <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+               <div style="font-weight: bold;">
+                  <span class="badge bg-info" style="font-size: 0.75rem;;" style="position: relative;">
+                  <span style="color: rgb(58, 58, 58) !important;">{{ i + 1 }}. </span>
+                  </span>
+                  {{ item.title }}
+               </div>
+               <div style="font-size: 0.85rem; opacity: 0.8;">Completed: {{ item.completedAt | date:'short' }}</div>
+            </div>
+            <button mat-button (click)="restoreItem(item)" style="color: limegreen;">Restore</button>
+         </div>
+      </div>
+   </div>
+   <div *ngIf="items.length > 0" style="display: flex; justify-content: space-between; margin-top: 16px;">
+      <div></div>
+   </div>
+   <div *ngIf="isFilterActiveAndEmpty" class="text-center mt-3 text-light">
+      No completed items match your filter terms.
+   </div>
+</div>

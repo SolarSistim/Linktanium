@@ -1,0 +1,6 @@
+{
+    "/settings": {
+      "target": "http://localhost:3692",
+      "secure": false
+    }
+  }

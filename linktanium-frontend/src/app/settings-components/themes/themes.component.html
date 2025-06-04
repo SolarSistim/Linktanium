@@ -1,0 +1,1227 @@
+<h3 mat-dialog-title class="pb-2"><i class="bi bi-palette custom-icon"></i> Themes</h3>
+<div class="container">
+<div class="mat-card button-panel mt-2 mb-1">
+   <div class="row">
+      <div class="col-lg-6 d-flex align-items-center">
+         <button
+            mat-button
+            class="nav-button"
+            (click)="saveAsNewTheme()">
+         <i class="bi bi-plus-lg"></i>&nbsp;Save as New Theme
+         </button>
+      </div>
+      <div class="col-lg-6 text-end">
+         <ng-container>
+            <button
+            style="margin-right: 10px;"
+            mat-button
+            [disabled]="!changed || selectedThemeName === 'Unsaved Theme'"
+            [ngClass]="{
+            'nav-button': changed && selectedThemeName !== 'Unsaved Theme',
+            'nav-button-disabled': !changed || selectedThemeName === 'Unsaved Theme'
+            }"
+            (click)="saveToCurrentTheme()">
+            <i class="bi bi-check-lg"></i>&nbsp;
+            Save to {{ selectedThemeName === 'Unsaved Theme' ? 'Current Theme' : '"' + selectedThemeName + '"' }}
+            </button>
+            <button
+               mat-button
+               class="nav-button"
+               (click)="saveSettings()">
+            <i class="bi bi-check-lg"></i>&nbsp;Apply Theme Now
+            </button>
+         </ng-container>
+      </div>
+   </div>
+</div>
+<app-tutorial-customizing-your-theme></app-tutorial-customizing-your-theme>
+<!-- End Alert -->
+<!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE -->
+<!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE -->
+<!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE --><!-- BLOBAL BG COLOR & IMAGE -->
+<app-small-title title="Global"></app-small-title>
+<mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+   <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;">
+      <div style="color: white;">
+         <h4 style="margin: 0;">Pre-configured Themes</h4>
+         <small style="color: #ccc;">Select a pre-configured theme to apply.</small><br />
+         <button mat-button class="upload-button mt-2" (click)="importTheme()">
+         <i class="bi bi-box-arrow-in-left"></i>&nbsp;Import Theme
+         </button>
+         <button mat-button class="upload-button mt-2" (click)="exportCurrentTheme()">
+         <i class="bi bi-box-arrow-right"></i>&nbsp;Export Current Theme
+         </button>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+         <button
+         *ngIf="selectedThemeName !== 'Unsaved Theme'"
+         mat-button
+         style="position: relative; top: -5px;"
+         class="upload-button mt-2"
+         [ngClass]="{ 'disabled-theme-button': !selectedThemeName }"
+         [disabled]="!selectedThemeName"
+         (click)="confirmDeleteTheme(selectedThemeName)">
+         <i class="bi bi-trash" style="color: red; position: relative; bottom: -1px;"></i>&nbsp;Delete {{ '"' + selectedThemeName + '"' }}
+         </button>
+         <mat-form-field style="max-width: 400px; min-width: 300px;">
+            <mat-label>Apply Theme</mat-label>
+            <mat-select [(ngModel)]="selectedThemeName" (selectionChange)="applyTheme($event.value)">
+            <mat-option *ngIf="selectedThemeName === 'Unsaved Theme'" [value]="'Unsaved Theme'" disabled>
+            No theme selected
+            </mat-option>
+            <mat-option *ngFor="let theme of themePresets" [value]="theme.name">
+            {{ theme.name }}
+            </mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </div>
+</mat-card>
+<ng-container *ngIf="selectedThemeName !== 'Unsaved Theme'">
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Global Background</h4>
+            <small style="color: #ccc;">Select a color or background image.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Type</mat-label>
+            <mat-select [(ngModel)]="formValues['GLOBAL_BACKGROUND_TYPE']" (ngModelChange)="onValueChange()">
+            <mat-option value="COLOR">Background Color</mat-option>
+            <mat-option value="IMAGE">Background Image</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card *ngIf="formValues['GLOBAL_BACKGROUND_TYPE'] === 'COLOR'" style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="backgroundColor"
+            [style.background]="backgroundColor"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />  
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GLOBAL_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card *ngIf="formValues['GLOBAL_BACKGROUND_TYPE'] === 'IMAGE'" style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Background Image</h4>
+            <small style="color: #ccc;">This is the logo shown in the app header.</small><br />
+            <button mat-button class="upload-button mt-2" (click)="triggerFileInput()">
+            <i class="bi bi-arrow-bar-up" style="position: relative; bottom: -1px;"></i>&nbsp;Upload
+            </button>
+            <button mat-button class="upload-button mt-2" (click)="openManageBackgroundImagesDialog()">
+            <i class="bi bi-images" style="position: relative; bottom: -1px;"></i>&nbsp;Browse
+            </button>
+            <input
+            #fileInputLogo
+            type="file"
+            accept=".png,.jpg,.jpeg,.gif"
+            hidden
+            (change)="onFileSelected($event, 'GLOBAL_BACKGROUND_IMAGE')" />
+         </div>
+         <ng-container *ngIf="!backgroundImageLoadError; else imageMissing">
+            <img
+            [src]="previewUrls['GLOBAL_BACKGROUND_IMAGE'] || '/assets/theme/background/' + formValues['GLOBAL_BACKGROUND_IMAGE']"
+            alt="Background Preview"
+            (error)="handleMissingImage(formValues['GLOBAL_BACKGROUND_IMAGE'])"
+            style="
+            width: 180px;
+            max-height: 160px;
+            height: auto;
+            object-fit: contain;
+            border-radius: 10px;
+            border: 1px solid white;
+            display: block;"
+            />
+         </ng-container>
+         <ng-template #imageMissing>
+            <div style="color: #FF5252; font-weight: bold; text-align: center; width: 180px;">
+               Image "{{ missingBackgroundImageName }}" is missing
+            </div>
+         </ng-template>
+      </div>
+   </mat-card>
+
+   <app-small-title title="Logo"></app-small-title>
+
+<mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+  <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+    <div style="color: white;">
+      <h4 style="margin: 0;">Logo Height in Pixels</h4>
+      <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+    </div>
+    <div style="display: flex; align-items: center; margin-left: 16px;">
+      
+   <mat-form-field appearance="fill" class="hex-output-field" style="width: 120px;">
+   <mat-label>Pixels</mat-label>
+   <input
+      matInput
+      type="text"
+      [(ngModel)]="formValues['LOGO_HEIGHT_PX']"
+      (ngModelChange)="onValueChange()"
+      placeholder="Pixels"
+   />
+   </mat-form-field>
+
+    </div>
+  </div>
+</mat-card>
+
+<mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+  <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+    <div style="color: white;">
+      <h4 style="margin: 0;">Logo Width in Pixels</h4>
+      <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+    </div>
+    <div style="display: flex; align-items: center; margin-left: 16px;">
+      
+   <mat-form-field appearance="fill" class="hex-output-field" style="width: 120px;">
+   <mat-label>Pixels</mat-label>
+   <input
+      matInput
+      type="text"
+      [(ngModel)]="formValues['LOGO_WIDTH_PX']"
+      (ngModelChange)="onValueChange()"
+      placeholder="Pixels"
+   />
+   </mat-form-field>
+
+    </div>
+  </div>
+</mat-card>
+
+
+   <!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field -->
+   <!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field -->
+   <!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field --><!-- Search Field -->
+   <app-small-title title="Search"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Search Feature Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['SEARCH_FEATURE_BACKGROUND_COLOR']"
+            [style.background]="searchFieldBackgroundColor"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['SEARCH_FEATURE_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Search Feature Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the search field's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['SEARCH_FEATURE_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Search Feature Border Color</h4>
+            <small style="color: #ccc;">This sets the border color of the search component.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['SEARCH_FEATURE_BORDER_COLOR']"
+            [style.background]="formValues['SEARCH_FEATURE_BORDER_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['SEARCH_FEATURE_BORDER_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Search Feature Border Width</h4>
+            <small style="color: #ccc;">This sets the width of the search component's border.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['SEARCH_FEATURE_BORDER_WIDTH']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Search Feature Border Corner Radius</h4>
+            <small style="color: #ccc;">Search Feature Border Corner Radius.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Corner Radius</mat-label>
+            <mat-select [(ngModel)]="formValues['SEARCH_FEATURE_CORNER_RADIUS']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="6">6</mat-option>
+            <mat-option [value]="7">7</mat-option>
+            <mat-option [value]="8">8</mat-option>
+            <mat-option [value]="9">9</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="11">11</mat-option>
+            <mat-option [value]="12">12</mat-option>
+            <mat-option [value]="13">13</mat-option>
+            <mat-option [value]="14">14</mat-option>
+            <mat-option [value]="15">15</mat-option>
+            <mat-option [value]="16">16</mat-option>
+            <mat-option [value]="17">17</mat-option>
+            <mat-option [value]="18">18</mat-option>
+            <mat-option [value]="19">19</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Search Feature Font Color</h4>
+            <small style="color: #ccc;">This sets the color of the fonts inside the search feature panel.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['SEARCH_FEATURE_FONT_COLOR']"
+            [style.background]="formValues['SEARCH_FEATURE_FONT_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['SEARCH_FEATURE_FONT_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <!-- Settings Button --><!-- Settings Button --><!-- Settings Button --><!-- Settings Button --><!-- Settings Button -->
+   <!-- Settings Button --><!-- Settings Button --><!-- Settings Button --><!-- Settings Button --><!-- Settings Button -->
+   <!-- Settings Button --><!-- Settings Button --><!-- Settings Button --><!-- Settings Button --><!-- Settings Button -->
+   <app-small-title title="Settings Button"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Settings Button Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['SETTINGS_BUTTON_BACKGROUND_COLOR']"
+            [style.background]="formValues['SETTINGS_BUTTON_BACKGROUND_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['SETTINGS_BUTTON_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Settings Buttons Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the search field's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['SETTINGS_BUTTON_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category -->
+   <!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category -->
+   <!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category --><!-- Category -->
+   <app-small-title title="Category"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Category Font Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['CATEGORY_FONT_COLOR']"
+            [style.background]="formValues['CATEGORY_FONT_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['CATEGORY_FONT_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Category Font Weight</h4>
+            <small style="color: #ccc;">Category font weight. 100 = light weight, 900 = heavy & bold.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Weight</mat-label>
+            <mat-select [(ngModel)]="formValues['CATEGORY_FONT_WEIGHT']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let weight of fontWeightOptions" [value]="weight">{{ weight }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Category Font Size</h4>
+            <small style="color: #ccc;">Category font size, 1px through 30px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Size</mat-label>
+            <mat-select [(ngModel)]="formValues['CATEGORY_FONT_SIZE']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let size of fontSizeOptions" [value]="size">{{ size }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Category Button Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['CATEGORY_BUTTON_BACKGROUND_COLOR']"
+            [style.background]="formValues['CATEGORY_BUTTON_BACKGROUND_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['CATEGORY_BUTTON_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Category Button Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the search field's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['CATEGORY_BUTTON_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group -->
+   <!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group -->
+   <!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group --><!-- Group -->
+   <app-small-title title="Group"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['GROUP_BACKGROUND_COLOR']"
+            [style.background]="formValues['GROUP_BACKGROUND_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GROUP_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the search field's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['GROUP_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Font Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['GROUP_FONT_COLOR']"
+            [style.background]="formValues['GROUP_FONT_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GROUP_FONT_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Font Weight</h4>
+            <small style="color: #ccc;">Group font weight. 100 = light weight, 900 = heavy & bold.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Weight</mat-label>
+            <mat-select [(ngModel)]="formValues['GROUP_FONT_WEIGHT']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let weight of fontWeightOptions" [value]="weight">{{ weight }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Font Size</h4>
+            <small style="color: #ccc;">Group font size, 1px through 30px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Size</mat-label>
+            <mat-select [(ngModel)]="formValues['GROUP_FONT_SIZE']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let size of fontSizeOptions" [value]="size">{{ size }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Border Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['GROUP_BORDER_COLOR']"
+            [style.background]="formValues['GROUP_BORDER_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GROUP_BORDER_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Border Width</h4>
+            <small style="color: #ccc;">Group Border Width, 1px through 5px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['GROUP_BORDER_WIDTH']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Border Corner Radius</h4>
+            <small style="color: #ccc;">Group Border Corner Radius.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['GROUP_BORDER_CORNER_RADIUS']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="6">6</mat-option>
+            <mat-option [value]="7">7</mat-option>
+            <mat-option [value]="8">8</mat-option>
+            <mat-option [value]="9">9</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="11">11</mat-option>
+            <mat-option [value]="12">12</mat-option>
+            <mat-option [value]="13">13</mat-option>
+            <mat-option [value]="14">14</mat-option>
+            <mat-option [value]="15">15</mat-option>
+            <mat-option [value]="16">16</mat-option>
+            <mat-option [value]="17">17</mat-option>
+            <mat-option [value]="18">18</mat-option>
+            <mat-option [value]="19">19</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+
+      <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Icon Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['GROUP_ICON_COLOR']"
+            [style.background]="formValues['GROUP_ICON_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GROUP_ICON_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Footer Icon Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['GROUP_FOOTER_ICON_COLOR']"
+            [style.background]="formValues['GROUP_FOOTER_ICON_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GROUP_FOOTER_ICON_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Footer Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['GROUP_FOOTER_BACKGROUND_COLOR']"
+            [style.background]="formValues['GROUP_FOOTER_BACKGROUND_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['GROUP_FOOTER_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Group Footer Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the search field's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['GROUP_FOOTER_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links -->
+   <!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links -->
+   <!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links --><!-- Links -->
+   <app-small-title title="Links"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LINK_BACKGROUND_COLOR']"
+            [style.background]="formValues['LINK_BACKGROUND_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LINK_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the link item's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['LINK_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Font Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LINK_FONT_COLOR']"
+            [style.background]="formValues['LINK_FONT_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LINK_FONT_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Font Weight</h4>
+            <small style="color: #ccc;">Link font weight. 100 = light weight, 900 = heavy & bold.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Weight</mat-label>
+            <mat-select [(ngModel)]="formValues['LINK_FONT_WEIGHT']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let weight of fontWeightOptions" [value]="weight">{{ weight }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Font Size</h4>
+            <small style="color: #ccc;">Link font size, 1px through 30px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Size</mat-label>
+            <mat-select [(ngModel)]="formValues['LINK_FONT_SIZE']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let size of fontSizeOptions" [value]="size">{{ size }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Border Color</h4>
+            <small style="color: #ccc;">This sets the border color of the link items within a group.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LINK_BORDER_COLOR']"
+            [style.background]="formValues['LINK_BORDER_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LINK_BORDER_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Border Width</h4>
+            <small style="color: #ccc;">Link Border Width, 1px through 5px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['LINK_BORDER_WIDTH']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Link Border Corner Radius</h4>
+            <small style="color: #ccc;">Link Border Corner Radius.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['LINK_BORDER_CORNER_RADIUS']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="6">6</mat-option>
+            <mat-option [value]="7">7</mat-option>
+            <mat-option [value]="8">8</mat-option>
+            <mat-option [value]="9">9</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="11">11</mat-option>
+            <mat-option [value]="12">12</mat-option>
+            <mat-option [value]="13">13</mat-option>
+            <mat-option [value]="14">14</mat-option>
+            <mat-option [value]="15">15</mat-option>
+            <mat-option [value]="16">16</mat-option>
+            <mat-option [value]="17">17</mat-option>
+            <mat-option [value]="18">18</mat-option>
+            <mat-option [value]="19">19</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> 
+   <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> 
+   <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> <!-- Lists --> 
+   <app-small-title title="Lists"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Background Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LIST_BACKGROUND_COLOR']"
+            [style.background]="formValues['LIST_BACKGROUND_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LIST_BACKGROUND_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Background Opacity</h4>
+            <small style="color: #ccc;">This sets the transparency of the link item's background from 0% to 100%.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Background Opacity</mat-label>
+            <mat-select [(ngModel)]="formValues['LIST_BACKGROUND_OPACITY']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let option of opacityOptions" [value]="option.value">{{ option.label }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+
+      <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Icon Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LIST_ICON_COLOR']"
+            [style.background]="formValues['LIST_ICON_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LIST_ICON_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Font Color</h4>
+            <small style="color: #ccc;">Pick a color or enter a custom HEX code.</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LIST_FONT_COLOR']"
+            [style.background]="formValues['LIST_FONT_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LIST_FONT_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Font Weight</h4>
+            <small style="color: #ccc;">Link font weight. 100 = light weight, 900 = heavy & bold.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Weight</mat-label>
+            <mat-select [(ngModel)]="formValues['LIST_FONT_WEIGHT']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let weight of fontWeightOptions" [value]="weight">{{ weight }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Font Size</h4>
+            <small style="color: #ccc;">Link font size, 1px through 30px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Font Size</mat-label>
+            <mat-select [(ngModel)]="formValues['LIST_FONT_SIZE']" (ngModelChange)="onValueChange()">
+            <mat-option *ngFor="let size of fontSizeOptions" [value]="size">{{ size }}</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Border Color</h4>
+            <small style="color: #ccc;">This sets the border color of the list items within a group..</small>
+         </div>
+         <div style="display: flex; align-items: center; margin-left: 16px;">
+            <input
+            [(colorPicker)]="formValues['LIST_BORDER_COLOR']"
+            [style.background]="formValues['LIST_BORDER_COLOR']"
+            [cpOutputFormat]="'hex'"
+            [cpAlphaChannel]="'disabled'"
+            [cpPosition]="'left'"
+            [cpDialogDisplay]="'popup'"
+            (colorPickerChange)="onValueChange()"
+            class="color-picker-field"
+            />
+            <mat-form-field appearance="fill" class="hex-output-field">
+               <mat-label>HEX</mat-label>
+               <input
+               matInput
+               type="text"
+               [(ngModel)]="formValues['LIST_BORDER_COLOR']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Border Width</h4>
+            <small style="color: #ccc;">List Border Width, 1px through 5px.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['LIST_BORDER_WIDTH']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">List Border Corner Radius</h4>
+            <small style="color: #ccc;">List Border Corner Radius.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Border Width</mat-label>
+            <mat-select [(ngModel)]="formValues['LIST_BORDER_CORNER_RADIUS']" (ngModelChange)="onValueChange()">
+            <mat-option [value]="1">1</mat-option>
+            <mat-option [value]="2">2</mat-option>
+            <mat-option [value]="3">3</mat-option>
+            <mat-option [value]="4">4</mat-option>
+            <mat-option [value]="5">5</mat-option>
+            <mat-option [value]="6">6</mat-option>
+            <mat-option [value]="7">7</mat-option>
+            <mat-option [value]="8">8</mat-option>
+            <mat-option [value]="9">9</mat-option>
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="11">11</mat-option>
+            <mat-option [value]="12">12</mat-option>
+            <mat-option [value]="13">13</mat-option>
+            <mat-option [value]="14">14</mat-option>
+            <mat-option [value]="15">15</mat-option>
+            <mat-option [value]="16">16</mat-option>
+            <mat-option [value]="17">17</mat-option>
+            <mat-option [value]="18">18</mat-option>
+            <mat-option [value]="19">19</mat-option>
+            <mat-option [value]="20">20</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button -->
+   <!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button -->
+   <!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button --><!-- Save Button -->
+   <div class="mat-card button-panel mt-2 mb-1">
+      <div class="row">
+         <div class="col-lg-6 d-flex align-items-center">
+            <button
+               mat-button
+               class="nav-button"
+               (click)="saveAsNewTheme()">
+            <i class="bi bi-plus-lg"></i>&nbsp;Save as New Theme
+            </button>
+         </div>
+         <div class="col-lg-6 text-end">
+            <ng-container>
+               <button
+               style="margin-right: 10px;"
+               mat-button
+               [disabled]="!changed || selectedThemeName === 'Unsaved Theme'"
+               [ngClass]="{
+               'nav-button': changed && selectedThemeName !== 'Unsaved Theme',
+               'nav-button-disabled': !changed || selectedThemeName === 'Unsaved Theme'
+               }"
+               (click)="saveToCurrentTheme()">
+               <i class="bi bi-check-lg"></i>&nbsp;
+               Save to {{ selectedThemeName === 'Unsaved Theme' ? 'Current Theme' : '"' + selectedThemeName + '"' }}
+               </button>
+               <button
+                  mat-button
+                  class="nav-button"
+                  (click)="saveSettings()">
+               <i class="bi bi-check-lg"></i>&nbsp;Apply Theme Now
+               </button>
+            </ng-container>
+         </div>
+      </div>
+      <app-ui-status></app-ui-status>
+   </div>
+</ng-container>

@@ -1,0 +1,53 @@
+.status-message {
+	position: fixed;
+	bottom: 30px;
+	left: 50%;
+	transform: translateX(-50%);
+	padding: 10px 20px;
+	border: 1px solid gray;
+	color: white;
+	font-weight: 200;
+	border-radius: 30px;
+	z-index: 9999;
+	background-color: rgba(255, 255, 255, 0.05);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	backdrop-filter: blur(6px);
+	gap: 8px;
+}
+
+.status-spinner ::ng-deep circle {
+	stroke: white;
+}
+
+.status-icon {
+	font-size: 18px;
+	display: inline-block;
+	margin-right: 6px;
+	color: white !important;
+}
+
+
+.status-message.loading {
+	background-color: #2e3a46;
+}
+
+.status-message.success {
+	background-color: #8BC34A;
+}
+
+.status-message.error {
+	background-color: #e74c3c;
+}
+
+.status-spinner {
+	margin-right: 10px;
+	vertical-align: middle;
+}
+
+.status-message {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}

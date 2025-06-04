@@ -1,0 +1,71 @@
+.list-item-delete-button {
+  font-size: 18px;
+}
+
+.list-item-details-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.list-item-details-icon {
+  margin-top: 4px;
+  font-size: 20px;
+  color: #999;
+}
+
+.list-item-details-panel {
+  border: 1px dotted rgba(255, 255, 255, 0.5);
+  padding: 10px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.03);
+  color: inherit;
+  width: 100%;
+}
+
+.list-item-line {
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.list-item-description-text {
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cdk-drag-preview::-webkit-scrollbar {
+  display: none;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+  padding: 10px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button[mat-icon-button] {
+  margin-left: -12px;
+  padding: 0;
+}

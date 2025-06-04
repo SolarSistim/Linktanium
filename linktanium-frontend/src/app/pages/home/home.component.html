@@ -1,0 +1,13 @@
+<div class="container" style="background-color: transparent;">
+   <div class="row d-flex justify-content-center align-items-center" *ngIf="showLogo">
+      <img 
+         src="/assets/branding/logo/logo.png"
+         [style.height.px]="logoHeight"
+         [style.width.px]="logoWidth"
+         style="margin-top: 25px; margin-bottom: -20px; padding-left: 0px; padding-right: 0px;">
+   </div>
+   <app-search *ngIf="searchFeature"></app-search>
+   <app-dashboard-drop></app-dashboard-drop>
+</div>
+<app-ui-status></app-ui-status>
+<app-settings-button></app-settings-button>

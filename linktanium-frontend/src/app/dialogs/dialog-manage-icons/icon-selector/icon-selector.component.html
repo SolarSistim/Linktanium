@@ -1,0 +1,86 @@
+<div class="icon-selector-wrapper">
+   <div class="top-section">
+      <div class="row">
+         <div class="col-lg-6">
+            <div *ngIf="selectedIcon && !previewUrl" class="selected-icon-preview mb-3">
+               <label class="selected-icon-label">Selected Icon:</label>
+               <div class="d-flex align-items-center mt-1">
+                  <img [src]="'/assets/icons/' + selectedIcon" alt="Selected Icon" class="selected-icon-image" />
+               </div>
+            </div>
+         </div>
+         <div class="col-lg-6">
+            <div *ngIf="!selectedFile" class="upload-section">
+               <button mat-button color="primary" (click)="openFileExplorer()">
+               <i class="bi bi-cloud-upload"></i>&nbsp;Upload Icon
+               </button>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="previewUrl" class="row">
+         <div class="col-lg-4 mb-3">
+            <img [src]="previewUrl" alt="Preview" class="preview-image" />
+         </div>
+         <div class="col-lg-8">
+            <label for="iconTitle">Icon Title</label>
+            <input matInput id="iconTitle" type="text" class="form-control" placeholder="Icon Title" [(ngModel)]="title">
+            <label for="iconDescription" class="mt-2">Description</label>
+            <input matInput id="iconDescription" type="text" class="form-control" placeholder="Icon Description" [(ngModel)]="description">
+            <div class="filename-text mt-2 mb-2">
+               &nbsp;<b>Filename:</b> {{ selectedFile?.name }}
+            </div>
+            <div class="filename-warning mt-2" *ngIf="filenameExists" [class.blink]="blinking">
+            🚫 Icon filename already exists.
+         </div>
+         <div class="confirm-button-container mt-3 d-flex align-items-center justify-content-end">
+            <ng-container *ngIf="!filenameExists; else showResetButton" >
+               <button mat-button color="warn" (click)="resetUpload()" class="mb-3">
+               <i class="bi bi-x-lg"></i> Cancel
+               </button>
+               <button mat-button color="accent" class="mb-3" (click)="uploadIcon()" [disabled]="uploading || !title.trim()">
+               <i class="bi bi-check-lg"></i> {{ uploading ? 'Uploading...' : 'Confirm Upload' }}
+               </button>
+            </ng-container>
+            <ng-template #showResetButton>
+               <button mat-button color="warn" class="mb-3" (click)="resetUpload()">
+               <i class="bi bi-arrow-counterclockwise"></i> Reset Upload
+               </button>
+            </ng-template>
+         </div>
+      </div>
+   </div>
+   <div class="input-group mb-3">
+      <input
+      type="text"
+      aria-label="Filter Icons"
+      class="form-control"
+      placeholder="Start Typing to filter icons"
+      [(ngModel)]="filterText"
+      />
+      <button
+      class="btn btn-outline-secondary"
+      type="button"
+      [disabled]="!filterText.trim()"
+      (click)="clearFilter()"
+      >
+      <i class="bi bi-x-lg"></i>
+      </button>
+   </div>
+</div>
+<div class="icon-grid">
+   <div *ngFor="let icon of filteredIcons" class="icon-item">
+      <div class="icon-wrapper"
+         matTooltip="{{ icon.title }}&#10;{{ icon.description }}"
+         matTooltipPosition="above"
+         matTooltipShowDelay="0">
+         <img
+         [src]="'/assets/icons/' + icon.filename"
+         [alt]="icon.title"
+         (click)="selectIcon(icon)"
+         (error)="onImageError($event)"
+         [class.selected-icon]="selectedIcon === icon.filename"
+         />
+      </div>
+   </div>
+</div>
+</div>

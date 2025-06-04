@@ -1,0 +1,24 @@
+.priority-dot {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-right: 8px;
+  border: 1px solid #2e3a46;
+}
+
+mat-select-trigger .priority-dot {
+  top: -1px;
+}
+
+.priority-dot.high {
+  background-color: red;
+}
+
+.priority-dot.medium {
+  background-color: gold;
+}
+
+.priority-dot.low {
+  background-color: limegreen;
+}

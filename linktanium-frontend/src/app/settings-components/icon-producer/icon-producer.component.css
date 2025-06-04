@@ -1,0 +1,100 @@
+mat-dialog-actions {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px;
+}
+
+mat-dialog-content {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	overflow: hidden;
+}
+
+.input-field {
+	width: 100%;
+}
+
+.button-panel {
+	background-color: #2e3a46;
+	padding: 15px;
+	border-radius: 3px;
+}
+
+.nav-button {
+	background-color: #3b4d59;
+	text-align: left;
+	color: white;
+}
+
+.nav-button-disabled {
+	background-color: #3b4d59;
+	text-align: left;
+	color: gray;
+}
+
+.full-height-row {
+	min-height: 100%;
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.col-md-8,
+.col-md-4 {
+	display: flex;
+	flex-direction: column;
+}
+
+.col-md-8 {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.cropper-panel {
+	background-color: #2e3a46;
+	border-radius: 4px;
+	padding: 15px;
+	color: white;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	height: 100%;
+}
+
+.cropper-wrapper {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.checkerboard-background {
+	background-color: #e0e0e0;
+	background-image: linear-gradient(45deg, #ccc 25%, transparent 25%),
+		linear-gradient(-45deg, #ccc 25%, transparent 25%),
+		linear-gradient(45deg, transparent 75%, #ccc 75%),
+		linear-gradient(-45deg, transparent 75%, #ccc 75%);
+	background-size: 20px 20px;
+	background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+.preview-panel {
+	background-color: #2e3a46;
+	border-radius: 4px;
+	padding: 15px;
+	color: white;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+::ng-deep image-cropper {
+	--cropper-outline-color: #2e3a46;
+	--cropper-overlay-color: #2e3a46;
+	max-width: 100%;
+	height: auto;
+}

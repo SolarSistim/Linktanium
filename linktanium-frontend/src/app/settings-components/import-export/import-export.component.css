@@ -1,0 +1,27 @@
+.nav-button {
+	background-color: #2e3a46;
+	text-align: left;
+	color: white;
+}
+
+.button-panel {
+	background-color: #3b4d59;
+	padding: 15px;
+	border-radius: 3px;
+}
+
+.mat-mdc-progress-spinner {
+	--mdc-circular-progress-active-indicator-color: white;
+}
+
+.orange-nav-button {
+	background-color: #ff9800;
+	text-align: left;
+	color: white;
+}
+
+.green-nav-button {
+	background-color: #00aa8d;
+	text-align: left;
+	color: white;
+}

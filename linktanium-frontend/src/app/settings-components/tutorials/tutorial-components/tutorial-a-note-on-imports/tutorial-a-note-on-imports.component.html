@@ -1,0 +1,23 @@
+<div *ngIf="showTutorial || !showTutorial && isSettingsComponent" class="alert alert-danger fade show mt-3" role="alert">
+   <h4 class="alert-heading"><i class="bi bi-exclamation-triangle-fill"></i> A Note on Imports</h4>
+   <p>
+      Importing a backup .ZIP file will <strong>erase</strong> all current Linktanium settings and replace them with what's in the file. This includes links, categories, icons, images, and themes.
+   </p>
+   <p>
+      Make sure you've exported your current data before proceeding.
+   </p>
+   <p
+      class="mb-0 d-flex justify-content-between align-items-center"
+      *ngIf="!isSettingsComponent"
+      >
+      <span>&nbsp;</span>
+      <span class="button-group ms-3">
+      <button mat-stroked-button style="margin-right: 10px;" (click)="dismissTutorial()">
+      <i class="bi bi-x-lg"></i> Don’t Show Again
+      </button>
+      <button type="button" mat-stroked-button (click)="showTutorial = false">
+      <i class="bi bi-caret-down"></i> Hide
+      </button>
+      </span>
+   </p>
+</div>

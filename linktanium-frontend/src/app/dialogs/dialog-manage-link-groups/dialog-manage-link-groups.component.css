@@ -1,0 +1,97 @@
+.bi {
+	cursor: grab;
+}
+
+::ng-deep .mat-mdc-form-field-subscript-wrapper {
+	display: none;
+}
+
+.category-row {
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 6px;
+	margin-bottom: 10px;
+	background-color: #f9f9f9;
+	transition: background-color 0.2s ease;
+}
+
+::ng-deep mat-dialog-content {
+	overflow-x: hidden !important;
+}
+
+.category-row:hover {
+	background-color: #eaeaea;
+}
+
+.cdk-drag-preview {
+	box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+	border-radius: 6px;
+	background: #fff;
+	padding: 8px;
+	z-index: 1000;
+}
+
+.cdk-drag-placeholder {
+	opacity: 0;
+}
+
+.cdk-drag-animating {
+	transition: transform 150ms ease;
+}
+
+.scroll-focus {
+	animation: flash-highlight 0.3s ease-in-out 0s 3;
+}
+
+@keyframes flash-highlight {
+	0% {
+		background-color: transparent;
+	}
+
+	50% {
+		background-color: rgba(255, 255, 0, 0.4);
+	}
+
+	100% {
+		background-color: transparent;
+	}
+}
+
+.close-icon {
+	position: absolute;
+	top: 22px !important;
+	right: 24px;
+	font-size: 1.1rem;
+	color: #666;
+	cursor: pointer;
+	transition: color 0.3s ease;
+}
+
+.close-icon:hover {
+	color: #000;
+}
+
+:host {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.dialog-flex-container {
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+}
+
+.dialog-content {
+	flex: 1 1 auto;
+	overflow-y: auto;
+	padding: 16px;
+	height: 93%;
+}
+
+.dialog-actions {
+	display: flex;
+	justify-content: flex-end;
+	padding: 8px 16px;
+}

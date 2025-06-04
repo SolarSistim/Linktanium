@@ -1,0 +1,173 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100% !important; position: relative;">
+<i class="bi bi-x-lg close-icon" title="Close" (click)="closeDialog()" *ngIf="!editingIconId"></i>
+<h3 mat-dialog-title class="pb-2">Icon Manager</h3>
+<mat-tab-group dynamicHeight (selectedIndexChange)="onTabChange($event)">
+   <mat-tab label="Icon Manager">
+      <div class="example-small-box mat-elevation-z4">
+         <div class="upload-section" *ngIf="!editingIconId" class="mt-2">
+            <span *ngIf="!previewUrl">
+            <button mat-button color="primary" class="mb-0" (click)="openFileExplorer(); clearFilter();">
+            <i class="bi bi-cloud-upload"></i>&nbsp;Upload Icon
+            </button>
+            </span>
+            <div *ngIf="previewUrl" class="row">
+               <div class="col-lg-4 mb-3">
+                  <img [src]="previewUrl" alt="Preview" class="preview-image" />
+               </div>
+               <div class="col-lg-8">
+                  <label for="iconTitle">Icon Title</label>
+                  <input matInput id="iconTitle" type="text" class="form-control" placeholder="Icon Title" [(ngModel)]="title">
+                  <label for="description">Description</label>
+                  <input matInput id="iconDescription" type="text" class="form-control" placeholder="Icon Description" [(ngModel)]="description">
+                  <div class="filename-text mt-2 mb-2">
+                     &nbsp;{{ selectedFile?.name }}
+                  </div>
+                  <div class="filename-warning mt-2" *ngIf="filenameExists" [class.blink]="blinking">
+                  🚫 Icon filename already exists.
+               </div>
+            </div>
+            <div class="confirm-button-container mt-3 d-flex align-items-end flex-column">
+               <ng-container *ngIf="!filenameExists; else showResetButton">
+                  <button mat-button color="accent" (click)="uploadIcon()" [disabled]="uploading || !title.trim()">
+                  <i class="bi bi-check-lg"></i> {{ uploading ? 'Uploading...' : 'Confirm Upload' }}
+                  </button>
+               </ng-container>
+               <ng-template #showResetButton>
+                  <button mat-button color="warn" (click)="resetUpload()">
+                  <i class="bi bi-arrow-counterclockwise"></i> Reset Upload
+                  </button>
+               </ng-template>
+            </div>
+         </div>
+      </div>
+      <div class="icon-grid-container" *ngIf="!editingIconId" style="padding-bottom: 10px;">
+         <div class="input-group mb-3">
+            <input
+            type="text"
+            aria-label="Filter Icons"
+            class="form-control"
+            placeholder="Start Typing to filter icons"
+            [(ngModel)]="filterText"
+            />
+            <button
+            class="btn btn-outline-secondary"
+            type="button"
+            [disabled]="!filterText.trim()"
+            (click)="clearFilter()"
+            >
+            <i class="bi bi-x-lg"></i>
+            </button>
+         </div>
+         <div class="scrollable-icon-grid">
+            <div class="icon-grid">
+               <div *ngFor="let icon of filteredIcons" class="icon-item">
+                  <div class="icon-wrapper"
+                     matTooltip="{{ icon.title }}&#10;{{ icon.description }}"
+                     matTooltipPosition="above"
+                     matTooltipShowDelay="0">
+                     <img [src]="'/assets/icons/' + icon.filename" [alt]="icon.title" />
+                     <button mat-icon-button [matMenuTriggerFor]="menuForIcon" class="menu-button">
+                     <i class="bi bi-list"></i>
+                     </button>
+                     <mat-menu #menuForIcon="matMenu">
+                        <button mat-menu-item (click)="startEditingIcon(icon)">
+                        <i class="bi bi-pencil me-2"></i> Edit
+                        </button>
+                        <button mat-menu-item (click)="confirmDelete(icon)">
+                        <i class="bi bi-trash me-2"></i> Delete
+                        </button>
+                     </mat-menu>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <div *ngIf="editingIconId" class="edit-panel-container">
+         <div class="edit-preview mb-3">
+            <img [src]="'/assets/icons/' + getEditingIcon()?.filename" alt="Icon Preview" class="edit-preview-image" />
+            <div class="filename-text mt-2">
+               &nbsp;<b>Filename:</b> {{ getEditingIcon()?.filename }}
+            </div>
+         </div>
+         <div class="edit-fields mb-3">
+            <label for="editTitle">Title:</label>
+            <input matInput id="editTitle" class="form-control mb-2" [(ngModel)]="editedTitle" placeholder="Title">
+            <label for="editDescription">Description:</label>
+            <input matInput id="editDescription" class="form-control mb-2" [(ngModel)]="editedDescription" placeholder="Description">
+         </div>
+         <div class="edit-actions d-flex justify-content-end mt-2">
+            <button mat-button color="warn" (click)="cancelEditing()">
+            <i class="bi bi-x-lg"></i> Cancel
+            </button>
+            <button mat-button color="accent" (click)="saveEditedIcon(getEditingIcon())" [disabled]="!hasChanges()">
+            <i class="bi bi-check-lg"></i> Save
+            </button>
+         </div>
+      </div>
+      </div>
+      <mat-dialog-actions class="justify-content-end" style="margin-right: -10px; margin-left: 8px;" *ngIf="!editingIconId">
+         <button *ngIf="selectedTabIndex === 1" mat-button color="warn" (click)="resetMultiUpload()">Reset</button>
+         <button *ngIf="selectedTabIndex === 1" mat-button color="accent" (click)="uploadMultipleIcons()" [disabled]="uploading || multiUploadFiles.length === 0">
+         <i class="bi bi-upload"></i> {{ uploading ? 'Uploading...' : 'Upload All' }}
+         </button>
+         <button *ngIf="selectedTabIndex !== 1" mat-button (click)="closeDialog()">Close</button>
+      </mat-dialog-actions>
+   </mat-tab>
+   <mat-tab label="Multi-Icon Uploader">
+      <div class="">
+         <div class="multi-upload-section multi-preview-list mt-4">
+            <input type="file" multiple accept=".png" (change)="handleMultiIconSelect($event)" hidden #multiIconInput>
+            <button
+            *ngIf="multiUploadFiles.length === 0 && duplicateFiles.length === 0"
+            mat-button
+            color="primary"
+            class="mb-4 mt-4"
+            (click)="multiIconInput.click()"
+            >
+            <i class="bi bi-cloud-upload"></i>&nbsp;Upload Multiple Icons
+            </button>
+            <div *ngIf="multiUploadFiles.length === 0 && duplicateFiles.length === 0" class="text-muted mt-1">
+               No files selected yet.
+            </div>
+            <div *ngIf="multiUploadFiles.length > 0">
+               <div *ngFor="let icon of multiUploadFiles; let i = index" class="multi-icon-preview d-flex align-items-start gap-3 mb-3">
+                  <div class="icon-column">
+                     <img [src]="icon.previewUrl" class="preview-image" /><br/>
+                     <div class="filename mb-2">{{ icon.file.name }}</div>
+                  </div>
+                  <div class="info-column flex-grow-1">
+                     <div class="form-group mb-2">
+                        <label class="form-label">Title</label>
+                        <input class="form-control" [(ngModel)]="icon.title" />
+                     </div>
+                     <div class="form-group">
+                        <label class="form-label">Description</label>
+                        <input class="form-control" [(ngModel)]="icon.description" />
+                     </div>
+                  </div>
+               </div>
+            </div>
+            <div class="text-warning mb-2" *ngIf="duplicateFiles.length > 0">
+               <h3>⚠️ These icons already exist and will not be uploaded:</h3>
+            </div>
+            <div *ngIf="duplicateFiles.length > 0" class="">
+               <div *ngFor="let icon of duplicateFiles" class="multi-icon-preview-duplicate d-flex align-items-start gap-3 mb-3 opacity-75">
+                  <div class="icon-column">
+                     <img [src]="icon.previewUrl" class="preview-image" />
+                  </div>
+                  <div class="info-column flex-grow-1">
+                     <div class="filename mb-2"><strong>Filename:</strong> {{ icon.file.name }}</div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+      <mat-dialog-actions class="justify-content-end" style="margin-right: -8px; margin-left: 8px;" *ngIf="!editingIconId">
+         <button *ngIf="selectedTabIndex === 1" mat-button color="warn" (click)="resetMultiUpload()">Reset</button>
+         <button *ngIf="selectedTabIndex === 1" mat-button color="accent" (click)="uploadMultipleIcons()" [disabled]="uploading || multiUploadFiles.length === 0">
+         <i class="bi bi-upload"></i> {{ uploading ? 'Uploading...' : 'Upload All' }}
+         </button>
+         <button *ngIf="selectedTabIndex !== 1" mat-button (click)="closeDialog()">Close</button>
+      </mat-dialog-actions>
+   </mat-tab>
+</mat-tab-group>

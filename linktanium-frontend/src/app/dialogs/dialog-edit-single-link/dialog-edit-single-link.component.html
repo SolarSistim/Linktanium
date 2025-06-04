@@ -1,0 +1,82 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100%; position: relative;">
+   <h3 mat-dialog-title class="pb-2">Edit Link</h3>
+   <i class="bi bi-x-lg close-icon" title="Close" (click)="cancel()"></i>
+   <div *ngIf="!isSelectingIcon; else iconSelectorTemplate">
+      <div style="display: flex; gap: 16px;">
+         <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Link Title</mat-label>
+            <input
+            matInput
+            id="linkName"
+            autocomplete="off"
+            [(ngModel)]="link.name"
+            placeholder="Link Title"
+            />
+         </mat-form-field>
+         <mat-form-field appearance="fill" style="flex: 1;">
+            <mat-label>Link URL</mat-label>
+            <input
+            matInput
+            id="linkUrl"
+            autocomplete="off"
+            [(ngModel)]="link.url"
+            placeholder="Link URL"
+            />
+         </mat-form-field>
+      </div>
+      <mat-form-field appearance="fill" style="width: 100%;" class="mt-2">
+         <mat-label>Description</mat-label>
+         <input
+         matInput
+         id="linkDescription"
+         autocomplete="off"
+         [(ngModel)]="link.description"
+         placeholder="Description"
+         />
+      </mat-form-field>
+      <div *ngIf="selectedIcon" class="mt-2">
+         <label>Selected Icon</label>
+         <div class="d-flex align-items-center">
+            <img [src]="'/assets/icons/' + selectedIcon" alt="Selected Icon" height="60" />
+            <button mat-button color="primary" (click)="startSelectingIcon()" style="margin-left: 10px;">
+            Select Icon...
+            </button>
+         </div>
+      </div>
+   </div>
+   <ng-template #iconSelectorTemplate>
+      <div>
+         <app-icon-selector
+         (iconSelected)="selectedIcon = $event"
+         (uploadInProgress)="handleUploadInProgress($event)"
+         [showUploadSection]="false"
+         [selectedIcon]="selectedIcon">
+         </app-icon-selector>
+      </div>
+   </ng-template>
+</mat-dialog-content>
+<mat-dialog-actions class="d-flex justify-content-between" style="margin: 10px;">
+   <ng-container *ngIf="isSelectingIcon; else normalActions">
+      <div>
+         <button mat-button (click)="stopSelectingIcon()" [disabled]="uploadInProgress || previewActive">
+         <mat-icon>close</mat-icon>
+         &nbsp;Cancel
+         </button>
+      </div>
+      <div>
+         <button mat-button color="primary" (click)="stopSelectingIcon()" [disabled]="!selectedIcon || uploadInProgress || previewActive">
+         <mat-icon>check</mat-icon>
+         &nbsp;Done
+         </button>
+      </div>
+   </ng-container>
+   <ng-template #normalActions>
+      <div>
+         <button mat-button color="warn" (click)="delete()">Delete Link</button>
+      </div>
+      <div>
+         <button mat-button color="primary" (click)="saveOnly()" [disabled]="isUnchanged">Save</button>
+         <button mat-button color="primary" (click)="saveAndClose()" [disabled]="isUnchanged">Save & Close</button>
+      </div>
+   </ng-template>
+</mat-dialog-actions>

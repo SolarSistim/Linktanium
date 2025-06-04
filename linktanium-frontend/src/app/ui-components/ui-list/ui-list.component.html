@@ -1,0 +1,46 @@
+<div
+class="custom-list-icon"
+(click)="open()"
+title="{{ list.name }}"
+style="border-radius: 10px;"
+[ngClass]="{ 'handles-visible': showHandles }"
+[ngStyle]="{
+'background-color': listStyles.backgroundColor,
+'color': listStyles.fontColor,
+'font-weight': listStyles.fontWeight,
+'font-size.px': listStyles.fontSize,
+'border': listStyles.borderWidth + 'solid' + listStyles.borderColor
+}"
+[style.border-width.px]="listStyles.borderWidth"
+[style.border-color]="listStyles.borderColor"
+[style.border-style]="'solid'"
+[style.border-radius.px]="listStyles.borderRadius"
+>
+<i
+   *ngIf="showHandles"
+   class="bi bi-list list-drag-handle"
+   cdkDragHandle
+   title="Drag List"
+   ></i>
+<i class="bi bi-list-columns-reverse" [ngStyle]="{ 'color': listStyles.listIconColor }"></i>
+<div class="list-name">
+   <span class="list-hover">{{ list.name }}</span>
+</div>
+<button
+mat-icon-button
+[matMenuTriggerFor]="menu"
+class="menu-trigger"
+aria-label="List menu"
+(click)="$event.stopPropagation()"
+>
+<i class="bi bi-three-dots-vertical link-menu-icon"></i>
+</button>
+</div>
+<mat-menu #menu="matMenu">
+   <button mat-menu-item (click)="openEditDialog()">
+   <i class="bi bi-pencil"></i> Edit List
+   </button>
+   <button mat-menu-item (click)="confirmDelete()">
+   <i class="bi bi-trash"></i> Delete List
+   </button>
+</mat-menu>

@@ -1,0 +1,81 @@
+<div class="mt-4">
+   <mat-form-field class="w-100 mb-2">
+      <mat-label>New Category</mat-label>
+      <input
+      matInput
+      [(ngModel)]="newCategoryName"
+      (ngModelChange)="newCategoryNameChange.emit(newCategoryName)"
+      (keydown.enter)="addCategory(true)"
+      />
+   </mat-form-field>
+   <div class="mt-3">
+      <h5 [style.color]="styleSettings.groupFontColor" class="pb-2">
+         Current Categories | {{ categories.length }} item{{ categories.length === 1 ? '' : 's' }}
+      </h5>
+      <div
+      cdkDropList
+      [cdkDropListData]="categories"
+      (cdkDropListDropped)="onDrop($event)"
+      class="category-drop-list"
+      >
+      <div
+      *ngIf="categories.length === 0"
+      class="mt-2"
+      [style.color]="styleSettings.groupFontColor"
+      >
+      No categories found.
+   </div>
+   <div
+   *ngFor="let cat of categories; let i = index"
+   cdkDrag
+   [cdkDragDisabled]="cat.isEditing"
+   class="list-item d-flex justify-content-between"
+   [style.backgroundColor]="styleSettings.linkBackgroundColor"
+   >
+   <span *ngIf="!cat.isEditing" [style.color]="styleSettings.groupFontColor" class="d-flex align-items-center gap-2">
+   <span class="badge bg-info" style="font-size: 0.75rem;">
+   <span style="color: rgb(58, 58, 58) !important;">{{ i + 1 }}.</span>
+   </span>
+   {{ cat.name }} | {{ getItemCountForCategory(cat.id) }} item{{ getItemCountForCategory(cat.id) === 1 ? '' : 's' }}
+   </span>
+   <ng-container *ngIf="cat.isEditing">
+      <input matInput [(ngModel)]="cat.tempName" class="form-control" style="margin-bottom: 10px; margin-top: 10px;" />
+      <button
+      class="mt-2"
+      mat-button
+      (click)="saveCategoryEdit(cat)"
+      [style.color]="styleSettings.groupFontColor"
+      >
+      Save
+      </button>
+      <button
+      class="mt-2"
+      mat-button
+      (click)="cancelCategoryEdit(cat)"
+      [style.color]="styleSettings.groupFontColor"
+      >
+      Cancel
+      </button>
+   </ng-container>
+   <div style="display: flex; align-items: center;" class="edit-delete-buttons-container">
+      <div class="icon-wrapper"
+      (click)="editCategory(cat)"
+      [ngStyle]="{ 'background-color': hoveredButtonKey === 'edit-' + cat.id ? styleSettings.groupBackgroundColor : 'transparent' }"
+      (mouseenter)="hoveredButtonKey = 'edit-' + cat.id"
+      (mouseleave)="hoveredButtonKey = null"
+      [style.color]="styleSettings.groupFontColor">
+      <i class="bi bi-pen" style="cursor: pointer;"></i>
+   </div>
+   <div class="icon-wrapper"
+   (click)="deleteCategory(cat)"
+   [ngStyle]="{ 'background-color': hoveredButtonKey === 'delete-' + cat.id ? styleSettings.groupBackgroundColor : 'transparent' }"
+   (mouseenter)="hoveredButtonKey = 'delete-' + cat.id"
+   (mouseleave)="hoveredButtonKey = null"
+   [style.color]="styleSettings.groupFontColor">
+   <i class="bi bi-x-lg" style="cursor: pointer;"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>

@@ -1,0 +1,23 @@
+<div *ngIf="showTutorial || !showTutorial && isSettingsComponent" class="alert alert-info fade show mt-3" role="alert">
+   <h4 class="alert-heading"><i class="bi bi-info-circle"></i> A Note on Icons</h4>
+   <p>
+      Optimal icon size is 120x120, and icon format must be .PNG. Using other dimensions can cause render issues, slow loading times, or other unpredictable behavior.
+   </p>
+   <p>
+      You can use Canva, Photoshop, Adobe Express, or any number of other free or paid image editors to create additional icons for Linktanium.
+   </p>
+   <p
+      class="mb-0 d-flex justify-content-between align-items-center"
+      *ngIf="!isSettingsComponent"
+      >
+      <span>&nbsp;</span>
+      <span class="button-group ms-3">
+      <button mat-stroked-button style="margin-right: 10px;" (click)="dismissTutorial()">
+      <i class="bi bi-x-lg"></i> Don’t Show Again
+      </button>
+      <button type="button" mat-stroked-button (click)="showTutorial = false">
+      <i class="bi bi-caret-down"></i> Hide
+      </button>
+      </span>
+   </p>
+</div>

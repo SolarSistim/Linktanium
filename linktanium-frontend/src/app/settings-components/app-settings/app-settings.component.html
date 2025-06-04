@@ -1,0 +1,246 @@
+<h3 mat-dialog-title class="pb-2"><i class="bi bi-sliders custom-icon"></i> App Settings</h3>
+<div class="container">
+   <div class="mat-card button-panel mt-2 mb-1">
+      <div class="row">
+         <div class="col-lg-6 d-flex align-items-center">
+         </div>
+         <div class="col-lg-6 text-end">
+            <ng-container>
+               <button
+               mat-button
+               class="nav-button"
+               style="color: gray;"
+               [disabled]="!changed"
+               [ngStyle]="{ color: changed ? '' : '#999' }"
+               (click)="saveSettings()">
+               <i class="bi bi-check-lg"></i>&nbsp;Save
+               </button>
+            </ng-container>
+         </div>
+      </div>
+   </div>
+   <app-small-title title="Appearance"></app-small-title>
+   <!-- PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE -->
+   <!-- PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE -->
+   <!-- PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE PAGE TITLE -->
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Page Title</h4>
+            <small style="color: #ccc;">This is the text that shows up on your browser's tab.</small>
+         </div>
+         <mat-form-field appearance="fill" style="width: 500px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Page Title</mat-label>
+            <input
+            matInput
+            type="text"
+            [(ngModel)]="formValues['PAGE_TITLE']"
+            (ngModelChange)="onValueChange()" />
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON  -->
+   <!-- FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON  -->
+   <!-- FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON FAVICON  -->
+   <mat-card style="background-color: #2e3a46; padding: 16px;">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Favicon</h4>
+            <small style="color: #ccc;">This is the icon shown in your browser tab.</small><br />
+            <button mat-button class="upload-button mt-2" (click)="triggerFileInput('FAVICON_IMAGE')">
+            <i class="bi bi-upload"></i>&nbsp;Browse
+            </button>
+            <input
+            #fileInputFavicon
+            type="file"
+            accept="image/png"
+            hidden
+            (change)="onFileSelected($event, 'FAVICON_IMAGE')" />
+         </div>
+         <div>
+            <img
+               [src]="previewUrls['FAVICON_IMAGE'] || '/assets/branding/favicon/favicon.png'"
+               style="max-width: 100px;" />
+         </div>
+      </div>
+   </mat-card>
+   <!-- LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO -->
+   <!-- LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO -->
+   <!-- LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO LOGO -->
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;" *ngIf="showLogo">Logo: <span style="color: #4CAF50;">Enabled</span></h4>
+            <h4 style="margin: 0;" *ngIf="!showLogo">Logo: <span style="color: #FF5252;">Disabled</span></h4>
+            <small style="color: #ccc;">Enable or disable the logo in the interface.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Logo</mat-label>
+            <mat-select [(ngModel)]="formValues['LOGO_ENABLE']" (selectionChange)="onValueChange()">
+            <mat-option [value]="'TRUE'">Enable</mat-option>
+            <mat-option [value]="'FALSE'">Disable</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <mat-card
+      *ngIf="formValues['LOGO_ENABLE'] === 'TRUE'"
+      style="background-color: #2e3a46; padding: 16px;"
+      class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Logo Image</h4>
+            <small style="color: #ccc;">This is the logo shown in the app header.</small><br />
+            <button mat-button class="upload-button mt-2" (click)="triggerFileInput('LOGO_IMAGE')">
+            <i class="bi bi-upload"></i>&nbsp;Browse
+            </button>
+            <input
+            #fileInputLogo
+            type="file"
+            accept="image/png"
+            hidden
+            (change)="onFileSelected($event, 'LOGO_IMAGE')" />
+         </div>
+         <div>
+            <img
+               [src]="previewUrls['LOGO_IMAGE'] || '/assets/branding/logo/logo.png'"
+               style="max-width: 100px;" />
+         </div>
+      </div>
+   </mat-card>
+   <!-- COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS -->
+   <!-- COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS -->
+   <!-- COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS COLUMNS -->
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Columns</h4>
+            <small style="color: #ccc;">The number of columns that populate the link dashboard area.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Dashboard Columns</mat-label>
+            <mat-select [(ngModel)]="formValues['DASHBOARD_COLUMNS']" (selectionChange)="onValueChange()">
+            <mat-option [value]="'1'">1 Column</mat-option>
+            <mat-option [value]="'2'">2 Columns</mat-option>
+            <mat-option [value]="'3'">3 Columns</mat-option>
+            <mat-option [value]="'4'">4 Columns</mat-option>
+            <mat-option [value]="'5'">5 Columns</mat-option>
+            <mat-option [value]="'6'">6 Columns</mat-option>
+            <mat-option [value]="'7'">7 Columns</mat-option>
+            <mat-option [value]="'8'">8 Columns</mat-option>
+            <mat-option [value]="'9'">9 Columns</mat-option>
+            <mat-option [value]="'10'">10 Columns</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE  -->
+   <!-- SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE  -->
+   <!-- SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE SEARCH FEATURE  -->
+   <app-small-title title="Search Feature"></app-small-title>
+   <app-tutorial-search-bar></app-tutorial-search-bar>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;" *ngIf="searchFeature">Search Feature: <span style="color: #4CAF50;">Enabled</span></h4>
+            <h4 style="margin: 0;" *ngIf="!searchFeature">Search Feature: <span style="color: #FF5252;">Disabled</span></h4>
+            <small style="color: #ccc;">Enable or disable the search bar on your Linktanium dashboard.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Search Feature</mat-label>
+            <mat-select [(ngModel)]="formValues['SEARCH_FEATURE']" (selectionChange)="onValueChange()">
+            <mat-option [value]="'TRUE'">Enable</mat-option>
+            <mat-option [value]="'FALSE'">Disable</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <ng-container *ngIf="formValues['SEARCH_FEATURE'] === 'TRUE'">
+      <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <div style="color: white;">
+               <h4 style="margin: 0;">Search Provider</h4>
+               <small style="color: #ccc;">Name of the search engine (e.g. Google, DuckDuckGo, Brave).</small>
+            </div>
+            <mat-form-field appearance="fill" style="width: 500px; min-width: 200px; margin-left: 16px;">
+               <mat-label>Search Provider</mat-label>
+               <input
+               matInput
+               [(ngModel)]="formValues['SEARCH_FEATURE_PROVIDER_NAME']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </mat-card>
+      <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+            <div style="color: white;">
+               <h4 style="margin: 0;">URL Query</h4>
+               <small style="color: #ccc;">The URL query your search engine uses.</small>
+            </div>
+            <mat-form-field appearance="fill" style="width: 500px; min-width: 200px; min-width: 200px; margin-left: 16px;">
+               <mat-label>URL Query</mat-label>
+               <input
+               matInput
+               [(ngModel)]="formValues['SEARCH_FEATURE_QUERY_URL']"
+               (ngModelChange)="onValueChange()" />
+            </mat-form-field>
+         </div>
+      </mat-card>
+   </ng-container>
+   <!-- LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS  -->
+   <!-- LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS  -->
+   <!-- LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS LIST SETTINGS  -->
+   <app-small-title title="Lists"></app-small-title>
+   <mat-card style="background-color: #2e3a46; padding: 16px;" class="mt-2 mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Default List Item Priority</h4>
+            <small style="color: #ccc;">Select the default list item priority when creating a new list item.</small>
+         </div>
+         <mat-form-field appearance="fill" style="max-width: 300px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Default List Item Priority</mat-label>
+            <mat-select [(ngModel)]="formValues['LIST_DEFAULT_PRIORITY']" (selectionChange)="onValueChange()">
+            <mat-option value="High">High</mat-option>
+            <mat-option value="Medium">Medium</mat-option>
+            <mat-option value="Low">Low</mat-option>
+            </mat-select>
+         </mat-form-field>
+      </div>
+   </mat-card>
+   <!-- <mat-card *ngIf="formValues['BASE_URL'] !== '\\'" style="background-color: #2e3a46; padding: 16px;" class="mb-2">
+      <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+         <div style="color: white;">
+            <h4 style="margin: 0;">Subfolder</h4>
+            <small style="color: #ccc;">Enter the subfolder where Linktanium is installed (e.g. /linktanium).</small>
+         </div>
+         <mat-form-field appearance="fill" style="width: 500px; min-width: 200px; margin-left: 16px;">
+            <mat-label>Subfolder</mat-label>
+            <input
+            matInput
+            type="text"
+            [(ngModel)]="formValues['BASE_URL']"
+            (ngModelChange)="onValueChange()" />
+         </mat-form-field>
+      </div>
+   </mat-card> -->
+   <div class="mat-card button-panel mt-2 mb-4">
+      <div class="row">
+         <div class="col-lg-6 d-flex align-items-center">
+         </div>
+         <div class="col-lg-6 text-end">
+            <ng-container>
+               <button
+               mat-button
+               class="nav-button"
+               style="color: gray;"
+               [disabled]="!changed"
+               [ngStyle]="{ color: changed ? '' : '#999' }"
+               (click)="saveSettings()">
+               <i class="bi bi-check-lg"></i>&nbsp;Save
+               </button>
+            </ng-container>
+         </div>
+      </div>
+   </div>
+   <app-ui-status></app-ui-status>
+</div>

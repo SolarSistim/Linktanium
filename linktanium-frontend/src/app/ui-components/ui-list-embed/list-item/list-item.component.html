@@ -1,0 +1,88 @@
+<div
+class="list-item d-flex align-items-center w-auto"
+cdkDrag
+[cdkDragDisabled]="disableDrag"
+(click)="!item.isEditing && !item.showDetails && toggleDetails()"
+[ngStyle]="{
+'background-color': styleSettings.linkBackgroundColor,
+'color': styleSettings.linkFontColor,
+'cursor': item.showDetails ? 'default' : 'pointer',
+'border': item.pinned ? '2px dotted yellow' : 'none'
+}"
+>
+<div *ngIf="!isMobile && !item.showDetails && !item.isEditing" class="d-flex align-items-center gap-1 me-2">
+   <span class="badge bg-secondary" style="font-size: 11px;">{{ item.createdAt | date: 'MM/dd/yyyy' }}</span>
+   <i class="bi"
+   [ngClass]="{
+   'bi-1-circle-fill': item.priority === 'High',
+   'bi-2-circle-fill': item.priority === 'Medium',
+   'bi-3-circle-fill': item.priority === 'Low'
+   }"
+   [style.color]="getPriorityColor(item.priority)"
+   style="font-size: 18px; padding-left: 10px;"
+   ></i>
+</div>
+<div class="flex-grow-1 ps-1 pe-1">
+   <div class="list-item-inline-text" *ngIf="!item.showDetails && !item.isEditing">
+      <span class="title-text">{{ item.title }}</span>
+   </div>
+   <ng-container *ngIf="item.showDetails">
+      <div class="list-item-details-wrapper">
+         <div class="list-item-details-icon"><i class="bi bi-info-circle"></i></div>
+         <div class="list-item-details-panel w-100" (click)="$event.stopPropagation()">
+            <div class="list-item-line"><strong>Title:</strong> {{ item.title }}</div>
+            <div class="list-item-line"><strong>Priority:</strong> {{ item.priority }}</div>
+            <div class="list-item-line"><strong>Description:</strong>
+               <span class="list-item-description-text">
+               {{ item.description?.trim() || 'No description yet' }}
+               </span>
+            </div>
+         </div>
+      </div>
+      <div class="d-flex justify-content-end gap-2 mt-2 w-100">
+         <button mat-button (click)="startEdit(); $event.stopPropagation()" [style.color]="styleSettings.groupFontColor">Edit</button>
+         <button mat-button (click)="!item.isEditing && !item.showDetails && toggleDetails()" [style.color]="styleSettings.groupFontColor">Close</button>
+      </div>
+   </ng-container>
+   <ng-container *ngIf="item.isEditing">
+      <div class="row mt-3 mb-2">
+         <div class="col-md-4">
+            <label class="form-label custom-form-label">Title</label>
+            <input matInput [(ngModel)]="item.tempTitle" class="form-control mb-2" />
+         </div>
+         <div class="col-md-4">
+            <label class="form-label custom-form-label">Priority</label>
+            <select [(ngModel)]="item.tempPriority" class="form-select mb-2">
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+            </select>
+         </div>
+         <div class="col-md-4">
+            <label class="form-label custom-form-label">Category</label>
+            <select [(ngModel)]="item.tempCategoryId" class="form-select mb-2">
+            <option *ngFor="let cat of categories" [value]="cat.id">{{ cat.name }}</option>
+            </select>
+         </div>
+         <div class="col-md-12">
+            <textarea [(ngModel)]="item.tempDescription" rows="4" class="form-control mb-2"></textarea>
+         </div>
+         <div class="col-md-12 d-flex justify-content-end gap-2">
+            <button mat-button (click)="save.emit()" [style.color]="styleSettings.groupFontColor">Save</button>
+            <button mat-button (click)="cancelEdit(); $event.stopPropagation()" [style.color]="styleSettings.groupFontColor">Cancel</button>
+         </div>
+      </div>
+   </ng-container>
+</div>
+<div *ngIf="!item.isEditing && !item.showDetails" class="d-flex align-items-start ms-auto">
+   <button mat-icon-button (click)="pinToggle.emit($event)" [style.color]="item.pinned ? '#67bb6a' : styleSettings.groupFontColor">
+   <i [ngClass]="item.pinned ? 'bi-pin-angle' : 'bi-pin'" class="bi"></i>
+   </button>
+   <button mat-icon-button (click)="startEdit()" [style.color]="styleSettings.groupFontColor">
+   <i class="bi bi-pencil list-item-delete-button"></i>
+   </button>
+   <button mat-icon-button (click)="delete.emit()" [style.color]="styleSettings.groupFontColor">
+   <i class="bi bi-x-lg list-item-delete-button"></i>
+   </button>
+</div>
+</div>

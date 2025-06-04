@@ -1,0 +1,14 @@
+:host {
+  .filter-checkboxes {
+    --check-color: var(--group-font-color);
+
+    .form-check-input {
+      accent-color: var(--check-color);
+      cursor: pointer;
+    }
+
+    .form-check-label {
+      color: var(--check-color);
+    }
+  }
+}

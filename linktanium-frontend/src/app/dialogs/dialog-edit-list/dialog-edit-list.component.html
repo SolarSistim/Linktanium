@@ -1,0 +1,11 @@
+<div style="overflow: hidden; padding: 1rem;">
+   <h2>Edit List</h2>
+   <mat-form-field class="w-100">
+      <mat-label>List Name</mat-label>
+      <input matInput [(ngModel)]="updatedName" (keydown.enter)="save()" />
+   </mat-form-field>
+   <div class="d-flex justify-content-end gap-2 mt-3">
+      <button mat-button (click)="cancel()">Cancel</button>
+      <button mat-button color="primary" (click)="save()" [disabled]="!updatedName.trim()">Save</button>
+   </div>
+</div>

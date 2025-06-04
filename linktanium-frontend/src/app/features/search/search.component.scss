@@ -1,0 +1,24 @@
+.custom-mat-card {
+	background-color: #3b4d59;
+	padding: 15px;
+}
+
+.filter-checkboxes label {
+	color: var(--group-font-color);
+	cursor: pointer;
+}
+
+::ng-deep mat-optgroup .mat-mdc-optgroup-label {
+  background-color: var(--optgroup-bg) !important;
+  padding: 8px !important;
+  font-size: 20px;
+}
+
+::ng-deep mat-optgroup .mat-mdc-optgroup-label .mdc-list-item__primary-text {
+  color: var(--optgroup-color) !important;
+  font-size: 20px;
+}
+
+mat-autocomplete {
+  height: 100vh !important;
+}

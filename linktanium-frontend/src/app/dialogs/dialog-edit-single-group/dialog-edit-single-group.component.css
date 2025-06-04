@@ -1,0 +1,32 @@
+:host {
+	display: block;
+	padding: 16px;
+}
+
+.input-group {
+	display: flex;
+}
+
+input.form-control {
+	flex: 1;
+}
+
+mat-dialog-actions {
+	display: flex;
+	justify-content: space-between;
+	padding: 8px 0 0;
+}
+
+.close-icon {
+	position: absolute;
+	top: 24px;
+	right: 22px;
+	font-size: 1.1rem;
+	color: #666;
+	cursor: pointer;
+	transition: color 0.3s ease;
+}
+
+.close-icon:hover {
+	color: #000;
+}

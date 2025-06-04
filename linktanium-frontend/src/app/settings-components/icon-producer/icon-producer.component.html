@@ -1,0 +1,72 @@
+<app-tutorial-icon-producer [isSettingsComponent]="false"></app-tutorial-icon-producer>
+<div class="mat-card button-panel mb-3 mt-4">
+   <div class="row">
+      <div class="col">
+         <input type="file" accept="image/*" hidden (change)="onImageSelected($event)" #fileInput />
+         <button mat-button (click)="fileInput.click()" class="nav-button">
+         <i class="bi bi-cloud-upload"></i>&nbsp;Select Icon
+         </button>
+      </div>
+   </div>
+</div>
+<div
+   class="alert alert-danger d-flex flex-column"
+   role="alert"
+   *ngIf="showFormatWarning"
+   >
+   <div>
+      <strong>Heads up!</strong> The image you uploaded is in a format that does not support transparency (like JPEG, BMP, or GIF).
+   </div>
+   <div class="mt-2">
+      While this is entirely acceptable, it is recommend to use a PNG or WEBP file for the best results. Your final icon will always be exported as a <strong>transparent PNG</strong>.
+   </div>
+   <div class="text-end mt-3">
+      <button mat-flat-button class="nav-button" (click)="dismissWarning()">I Understand</button>
+   </div>
+</div>
+<div class="row">
+   <div class="row align-items-stretch full-height-row" style="padding-right: 0px !important; padding-left: 0px !important;">
+      <div class="col-md-8" *ngIf="imageChangedEvent && !showFormatWarning">
+         <div class="cropper-panel p-3">
+            <div class="cropper-wrapper">
+               <image-cropper
+               class="p-3"
+               *ngIf="imageChangedEvent"
+               [imageChangedEvent]="imageChangedEvent"
+               [maintainAspectRatio]="true"
+               [aspectRatio]="1"
+               [resizeToWidth]="512"
+               [resizeToHeight]="512"
+               format="png"
+               output="blob"
+               (imageCropped)="onImageCropped($event)"
+               (imageLoaded)="onImageLoaded($event)"
+               (cropperReady)="onCropperReady()"
+               (loadImageFailed)="onLoadImageFailed()"
+               ></image-cropper>
+            </div>
+         </div>
+      </div>
+      <div class="col-md-4" style="padding-right: 0px !important;" *ngIf="!showFormatWarning">
+         <div *ngIf="croppedImageUrl" class="preview-panel">
+            <h5>Preview:</h5>
+            <div class="checkerboard-background mb-3" style="width: 100%; padding: 0px;">
+               <img [src]="croppedImageUrl" class="preview-image" style="max-width: 100%; display: block;" />
+            </div>
+            <mat-form-field appearance="fill" class="w-100 mb-3">
+               <mat-label>Filename</mat-label>
+               <input matInput [(ngModel)]="exportFilename" placeholder="Enter file name" />
+            </mat-form-field>
+            <mat-form-field appearance="fill" class="w-100">
+               <mat-label>Select Size</mat-label>
+               <mat-select [(ngModel)]="selectedExportSize">
+               <mat-option *ngFor="let size of exportSizes" [value]="size">{{ size }} x {{ size }}</mat-option>
+               </mat-select>
+            </mat-form-field>
+            <button mat-button color="accent" class="nav-button w-100 mt-2" (click)="exportImage(selectedExportSize)">
+            <i class="bi bi-download"></i>&nbsp;Download PNG
+            </button>
+         </div>
+      </div>
+   </div>
+</div>

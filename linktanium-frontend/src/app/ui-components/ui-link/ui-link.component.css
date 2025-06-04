@@ -1,0 +1,254 @@
+ 
+  .cdk-drag-preview {
+    box-sizing: border-box;
+    border-radius: 4px;
+    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+                0 8px 10px 1px rgba(0, 0, 0, 0.14),
+                0 3px 14px 2px rgba(0, 0, 0, 0.12);
+  }
+  
+  .cdk-drag-placeholder {
+    opacity: 0;
+  }
+  
+  .cdk-drag-animating {
+    transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+  }
+  
+  .tab-menu-trigger:hover {
+    color: #fff;
+  }
+  
+  .link-name-container {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    max-width: 100%;
+  }
+  
+  .link-name-container {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    cursor: default;
+  }
+  
+  .link-item.cdk-drag-preview .link-name-container,
+  .link-item.cdk-drag-placeholder .link-name-container {
+    font-size: 14px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+
+  ::ng-deep .mdc-tab__text-label {
+    color: white !important;
+  }
+
+  .group-box {
+    padding: 10px 10px;
+    border: solid 1px #3b4d59;
+    border-radius: 4px;
+    color: rgba(0, 0, 0, 0.87);
+    display: inline-block;
+    box-sizing: border-box;
+    background: white;
+    text-align: center;
+    font-size: 14px;
+    min-width: 115px;
+    background-color: #2e3a46;
+  }
+
+  .group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .group-drag-handle {
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+    margin-right: 10px;
+  }
+  
+  .group-drag-handle:hover {
+    color: #555;
+  }
+
+  .group-name-container {
+    color: white;
+    flex-grow: 1;
+    margin-left: 0px;
+    overflow: hidden;
+  }
+  
+  .group-name {
+    margin-bottom: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+    
+  .group-box:hover .group-menu-icon {
+    opacity: 1;
+  }
+
+  .link-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .group-list {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+    min-height: 60px;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .empty-drop-placeholder {
+    min-height: 100%;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.5;
+    border: 1px dashed #555;
+    color: white;
+    padding: 10px;
+  }
+
+  .link-item {
+    position: relative;
+    padding-left: 24px;
+    color: white;
+    padding: 4px 6px;
+    background-color: #3b4d59;
+    border-radius: 3px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .link-drag-handle {
+    cursor: grab;
+    font-size: 16px;
+    color: #aaa;
+  }
+  
+  .link-drag-handle:hover {
+    color: #777;
+  }
+
+  .link-drag-handle,
+  .group-drag-handle {
+    opacity: 0;
+    transform: scale(0.8);
+    pointer-events: none;
+    transition: opacity 0.1s ease, transform 0.1s ease;
+  }
+
+  .handles-visible .link-drag-handle,
+  .handles-visible .group-drag-handle {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+  }
+
+  .link-name-container {
+    flex-grow: 1;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer !important;
+  }
+
+  .link-menu-icon {
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .link-menu-icon:hover {
+    color: #a1a1a1;
+  }
+  
+  .link-item:hover .link-menu-icon {
+    opacity: 1;
+  }
+
+  .add-group-box {
+    cursor: pointer;
+    border: 2px dashed #888;
+    background-color: transparent;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    transition: background-color 0.2s, border-color 0.2s;
+    border-radius: 6px;
+    font-weight: 500;
+    opacity: 0.2
+  }
+  
+  .add-group-box:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: #ccc;
+    color: #aaa;
+  }
+  
+  
+  .add-group-box.static {
+    pointer-events: auto !important;
+  }
+
+  .group-menu-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: #888;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  
+  .group-menu-icon:hover {
+    color: #a1a1a1;
+  }
+
+  .link-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .link-icon {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    cursor: pointer;
+    position: relative;
+    top: -2px;
+  }
+
+.link-hover {
+  cursor: pointer !important;
+}
+
+.link-hover:hover {
+  text-decoration: underline;
+}

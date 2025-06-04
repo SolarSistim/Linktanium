@@ -1,0 +1,63 @@
+<mat-tab-group *ngIf="categories.length"
+[(selectedIndex)]="selectedTabIndex" 
+(selectedTabChange)="onTabChange($event)" 
+animationDuration="125ms" 
+style="margin-bottom: 25px; margin-top: 25px;"
+mat-stretch-tabs
+>
+<mat-tab *ngFor="let category of categories" [label]="category.name">
+<app-tutorial-crash-course></app-tutorial-crash-course>
+<ng-template mat-tab-label>
+   <div class="custom-tab-label-wrapper">
+      <span class="category-name" 
+      [title]="category.name"
+      [ngStyle]="{
+      'color': categoryFontColor,
+      'font-weight': categoryFontWeight,
+      'font-size': categoryFontSize
+      }">{{ category.name }}</span>
+      <i
+      *ngIf="!category.isPlaceholder"
+      class="bi bi-three-dots-vertical tab-menu-trigger"
+      [matMenuTriggerFor]="tabMenu"
+      (click)="$event.stopPropagation()"
+      ></i>
+   </div>
+</ng-template>
+<mat-menu #tabMenu="matMenu">
+   <button mat-menu-item (click)="openAddCategoryDialog()">
+   <i class="bi bi-plus-lg"></i> Add Category
+   </button>
+   <button mat-menu-item (click)="openEditCategoryDialog(category)">
+   <i class="bi bi-pencil"></i> Edit Category
+   </button>
+   <button mat-menu-item (click)="openManageCategoriesDialog()">
+   <i class="bi bi-sliders"></i> Category Manager
+   </button>
+   <button mat-menu-item (click)="deleteCategory(category)">
+   <i class="bi bi-x-lg"></i> Delete Category
+   </button>
+</mat-menu>
+<ng-container *ngIf="category.isPlaceholder; else normalCategory">
+   <div class="d-flex justify-content-center align-items-center" style="padding: 40px; padding-top: 50px; padding-bottom: 90px; text-align: center;">
+      <div>
+         <h2>Welcome to Linktanium</h2>
+         <p>No categories exist yet. Click below to create your first one.</p>
+         <button mat-raised-button color="primary" (click)="openAddCategoryDialog()">
+         <i class="bi bi-plus-lg"></i> Create Category
+         </button>
+      </div>
+   </div>
+</ng-container>
+<ng-template #normalCategory>
+   <app-ui-link-group
+   [category]="category"
+   [categories]="categories"
+   [selectedThemeName]="selectedThemeName"
+   [isGroupDraggable]="isGroupDraggable"
+   [isLinkDraggable]="isLinkDraggable"
+   (refreshRequested)="refreshCategories()"
+   ></app-ui-link-group>
+</ng-template>
+</mat-tab>
+</mat-tab-group>

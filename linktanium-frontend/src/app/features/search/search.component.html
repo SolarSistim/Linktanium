@@ -1,0 +1,138 @@
+<mat-card
+class="custom-mat-card mt-5"
+[ngStyle]="{
+'background-color': cardBackgroundRgba,
+'border-color': searchBorderColor,
+'border-width.px': searchBorderWidth,
+'border-style': 'solid'
+}"
+[style.border-radius.px]="searchCornerRadius"
+>
+<mat-form-field class="w-100">
+   <mat-label>Search</mat-label>
+   <input type="text"
+   #searchInput
+   matInput
+   placeholder="Start typing to search or filter."
+   [formControl]="searchControl"
+   [matAutocomplete]="auto"
+   [disabled]="isSearchDisabled"
+   (keydown.enter)="handleEnter()"
+   (focus)="onFocus()" />
+   <button *ngIf="searchControl.value"
+   matSuffix
+   mat-icon-button
+   aria-label="Clear"
+   (click)="clearSearch()">
+   <mat-icon>clear</mat-icon>
+   </button>
+   <mat-autocomplete #auto="matAutocomplete" class="autocomplete-custom" autoActiveFirstOption (optionSelected)="onOptionSelected($event)">
+   <mat-option *ngIf="searchControl.value" [value]="'SEARCH_EXTERNAL'" style="padding-left: 25px;">
+   🔍 Search {{ searchProviderName }} for "{{ searchControl.value }}" — <small class="text-muted">({{ searchProviderName }} Search)</small>
+   </mat-option>
+
+<mat-optgroup
+  *ngIf="filteredLinks.length > 0"
+  label="Links"
+>
+  <mat-option *ngFor="let link of filteredLinks" [value]="link">
+    <img [src]="getIconUrl(link.icon)"
+         width="24"
+         height="24"
+         style="margin-right: 8px;"
+         (error)="onImageError($event)">
+    {{ link.name }} —
+    <small class="text-muted"><b>Group:</b> {{ link.group?.name }}</small>
+  </mat-option>
+</mat-optgroup>
+
+   <mat-optgroup *ngIf="filteredLists.length > 0" label="Lists">
+      <mat-option *ngFor="let list of filteredLists" [value]="list" (click)="onListSelected(list)">
+      <i class="bi bi-list-columns-reverse"></i>&nbsp; {{ list.name }} - <small class="text-muted"><b>List</b></small>
+      </mat-option>
+   </mat-optgroup>
+   <mat-optgroup *ngIf="filteredListItems.length > 0" label="List Items">
+      <mat-option *ngFor="let item of filteredListItems" [value]="item" (click)="onListItemSelected(item)">
+      <i class="bi bi-sticky"></i>&nbsp; {{ item.title }}
+      <small *ngIf="item.list?.name" class="text-muted">— <b>List item in: </b> {{ item.list.name }}</small>
+      </mat-option>
+   </mat-optgroup>
+
+   <mat-optgroup *ngIf="filteredGroupsWithItems.length > 0" label="Groups">
+  <ng-container *ngFor="let group of filteredGroupsWithItems">
+    <mat-label style="padding-left: 10px !important; padding-top: 10px;">
+      {{ group.groupName }}
+    </mat-label>
+
+    <mat-option
+      *ngFor="let link of group.links"
+      [value]="link"
+      (click)="openLink(link)">
+      <img [src]="getIconUrl(link.icon)" width="24" height="24" style="margin-right: 8px;" (error)="onImageError($event)">
+      {{ link.name }} <small class="text-muted">— Link</small>
+    </mat-option>
+
+    <mat-option
+      *ngFor="let list of group.lists"
+      [value]="list"
+      (click)="onListSelected(list)">
+      <i class="bi bi-list-columns-reverse"></i>&nbsp;
+      {{ list.name }} <small class="text-muted">— List</small>
+    </mat-option>
+  </ng-container>
+</mat-optgroup>
+
+
+   </mat-autocomplete>
+</mat-form-field>
+<div class="mt-3 d-flex justify-content-between align-items-center">
+   <div
+   [ngStyle]="{ color: searchFontColor, cursor: 'pointer' }"
+   (click)="showFilterOptions = !showFilterOptions"
+   class="d-flex align-items-center"
+   >
+   {{ showFilterOptions ? 'Hide search filter options' : 'Show search filter options' }}
+   <i
+      class="bi me-2"
+      [ngClass]="showFilterOptions ? 'bi-chevron-up' : 'bi-chevron-down'"
+      style="margin-left: 6px; position: relative; bottom: -1px;"
+      ></i>
+   <ng-container *ngIf="isSearchDisabled">
+      <i class="bi bi-exclamation-triangle" style="margin-left: 10px; margin-right: 5px; color: yellow; cursor: pointer !important;"></i>
+      <span [ngStyle]="{ color: searchFontColor }"><i>Search feature disabled until a searchable element is selected.</i></span>
+   </ng-container>
+</div>
+</div>
+<div
+   *ngIf="showFilterOptions"
+   class="d-flex justify-content-between align-items-center flex-wrap mt-2"
+   style="width: 100%;"
+   >
+   <div class="d-flex gap-4 align-items-center flex-wrap filter-checkboxes">
+      <div class="form-check d-flex align-items-center">
+         <input type="checkbox" class="form-check-input" id="filterByName" [(ngModel)]="filterByName" (change)="updateSearchControlState()"/>
+         <label class="form-check-label ms-2" [ngStyle]="{ color: searchFontColor }" for="filterByName">Link Item Name</label>
+      </div>
+      <div class="form-check d-flex align-items-center">
+         <input type="checkbox" class="form-check-input" id="filterByDescription" [(ngModel)]="filterByDescription" (change)="updateSearchControlState()"/>
+         <label class="form-check-label ms-2" [ngStyle]="{ color: searchFontColor }" for="filterByDescription">Link Item Description</label>
+      </div>
+      <div class="form-check d-flex align-items-center">
+         <input type="checkbox" class="form-check-input" id="filterByListName" [(ngModel)]="filterByListName" (change)="updateSearchControlState()"/>
+         <label class="form-check-label ms-2" [ngStyle]="{ color: searchFontColor }" for="filterByListName">List Name</label>
+      </div>
+      <div class="form-check d-flex align-items-center">
+         <input type="checkbox" class="form-check-input" id="filterByListItem" [(ngModel)]="filterByListItem" (change)="updateSearchControlState()"/>
+         <label class="form-check-label ms-2" [ngStyle]="{ color: searchFontColor }" for="filterByListItem">List Item</label>
+      </div>
+   </div>
+   <div
+   class="ms-auto d-flex align-items-center"
+   [ngStyle]="{ color: searchFontColor, cursor: 'pointer', whiteSpace: 'nowrap' }"
+   (click)="toggleAllFilters()"
+   >
+   <i class="bi me-2" [ngClass]="allFiltersSelected ? 'bi-x-lg' : 'bi-check-lg'"></i>
+   {{ allFiltersSelected ? 'Deselect All' : 'Select All' }}
+</div>
+</div>
+</mat-card>

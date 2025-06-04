@@ -1,0 +1,85 @@
+<div class="custom-container" [class.example-is-mobile]="isMobile()">
+   <mat-toolbar class="custom-toolbar">
+      <button mat-icon-button (click)="snav.toggle()">
+         <mat-icon style="color: white !important;">menu</mat-icon>
+      </button>
+      <h1 class="example-app-name">Settings</h1>
+   </mat-toolbar>
+   <mat-sidenav-container class="custom-sidenav-container" [style.marginTop.px]="isMobile() ? 56 : 0">
+      <mat-sidenav #snav
+      [mode]="isMobile() ? 'over' : 'side'"
+      [opened]="!isMobile()"
+      [fixedInViewport]="isMobile()"
+      fixedTopGap="56">
+      <mat-nav-list class="p-3">
+         <button mat-button class="nav-button mb-2"
+         [class.active]="selectedPanel() === 'app settings'"
+         (click)="selectedPanel.set('app settings')"
+         >
+         <i class="bi bi-sliders custom-icon"></i>
+         <span class="custom-button-text">App Settings</span>
+         </button>
+         <button mat-button class="nav-button mb-2" 
+         [class.active]="selectedPanel() === 'icons'"
+         (click)="selectedPanel.set('icons')"
+         >
+         <i class="bi bi-images custom-icon"></i>
+         <span class="custom-button-text">Icons</span>
+         </button>
+         <button mat-button class="nav-button mb-2"
+         [class.active]="selectedPanel() === 'themes'"
+         (click)="selectedPanel.set('themes')"
+         >
+         <i class="bi bi-palette custom-icon"></i>
+         <span class="custom-button-text">Themes</span>
+         </button>
+         <button mat-button class="nav-button mb-2"
+         [class.active]="selectedPanel() === 'tutorials'"
+         (click)="selectedPanel.set('tutorials')"
+         >
+         <i class="bi bi-journal-text custom-icon"></i>
+         <span class="custom-button-text">Tutorials</span>
+         </button>
+         <button mat-button class="nav-button mb-2" 
+         [class.active]="selectedPanel() === 'import/export'"
+         (click)="selectedPanel.set('import/export')"
+         >
+         <i class="bi bi-arrow-right-square custom-icon"></i>
+         <span class="custom-button-text">Import Export</span>
+         </button>
+         <button mat-button class="nav-button mb-2" 
+         [class.active]="selectedPanel() === 'about'"
+         (click)="selectedPanel.set('about')"
+         >
+         <i class="bi bi-question-circle custom-icon"></i>
+         <span class="custom-button-text">About</span>
+         </button>
+         <mat-divider></mat-divider>
+         <button mat-button class="nav-button mb-2 mt-2" routerLink="/">
+         <i class="bi bi-arrow-return-left custom-icon"></i>
+         <span class="custom-button-text">Return</span>
+         </button>
+      </mat-nav-list>
+      </mat-sidenav>
+      <mat-sidenav-content>
+         <ng-container *ngIf="selectedPanel() === 'icons'">
+            <app-icon-manager></app-icon-manager>
+         </ng-container>
+         <ng-container *ngIf="selectedPanel() === 'app settings'">
+            <app-app-settings></app-app-settings>
+         </ng-container>
+         <ng-container *ngIf="selectedPanel() === 'themes'">
+            <app-themes></app-themes>
+         </ng-container>
+         <ng-container *ngIf="selectedPanel() === 'import/export'">
+            <app-import-export></app-import-export>
+         </ng-container>
+         <ng-container *ngIf="selectedPanel() === 'about'">
+            <app-about></app-about>
+         </ng-container>
+         <ng-container *ngIf="selectedPanel() === 'tutorials'">
+            <app-tutorials></app-tutorials>
+         </ng-container>
+      </mat-sidenav-content>
+   </mat-sidenav-container>
+</div>

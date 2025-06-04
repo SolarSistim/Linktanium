@@ -1,0 +1,10 @@
+.dialog-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 24px 24px 0 24px;
+  background-color: var(--group-bg-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

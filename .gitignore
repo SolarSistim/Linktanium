@@ -1,0 +1,31 @@
+# Node.js
+node_modules/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.DS_Store
+
+# Angular
+linktanium-frontend/node_modules/
+linktanium-frontend/dist/
+linktanium-frontend/.angular/
+linktanium-frontend/src/environments/*.ts
+
+# VS Code
+.vscode/
+
+# Editor-specific
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store
+.localized
+Thumbs.db

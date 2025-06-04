@@ -1,0 +1,13 @@
+<div *ngIf="message"
+class="status-message"
+[ngClass]="status">
+<mat-progress-spinner
+   *ngIf="status === 'loading'"
+   mode="indeterminate"
+   diameter="20"
+   strokeWidth="3"
+   class="status-spinner">
+</mat-progress-spinner>
+<span *ngIf="status === 'success'" class="status-icon" style="color: white !important;"><i class="bi bi-check-lg"></i></span>
+<span class="status-text">{{ message }}</span>
+</div>

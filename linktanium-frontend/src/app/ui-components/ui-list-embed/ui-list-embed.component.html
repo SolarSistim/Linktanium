@@ -1,0 +1,761 @@
+<div [ngStyle]="{ '--group-bg-color': groupBackgroundColor }"
+   style="display: flex; flex-direction: column; height: 100%; position: relative; border-radius: 50px !important;">
+   <div class="dialog-header" [style.color]="styleSettings.groupFontColor">
+      <h3 class="pb-2" [style.color]="styleSettings.groupFontColor">
+         <ng-container *ngIf="showExportPanel; else normalHeader" [style.background-color]="groupBackgroundColor">
+         Export list "<span style="font-weight: 500;">{{ list?.name || ('#' + listId) }}</span>"
+         </ng-container>
+         <ng-template #normalHeader>
+            <ng-container *ngIf="showNewItemForm">
+               Add List Item
+            </ng-container>
+            <ng-container *ngIf="isCategoryEditMode">
+               Manage Categories |
+               <span style="font-size: 1.1rem;">
+                  <ng-container *ngIf="categories?.length; else noCategories">
+                     {{ categories.length }} {{ categories.length === 1 ? 'category' : 'categories' }}
+                  </ng-container>
+                  <ng-template #noCategories><i>No categories</i></ng-template>
+               </span>
+            </ng-container>
+            <ng-container *ngIf="!showNewItemForm && !isCategoryEditMode">
+               <ng-container *ngIf="showCompletedItems; else normalTitle">
+                  Completed list items |
+                  <span style="font-size: 1.1rem;">
+                     <ng-container *ngIf="completedItemCount > 0; else noCompleted">
+                        {{ completedItemCount }} {{ completedItemCount === 1 ? 'completed item' : 'completed items' }}
+                     </ng-container>
+                     <ng-template #noCompleted><i>No items</i></ng-template>
+                  </span>
+               </ng-container>
+               <ng-template #normalTitle>
+                        
+                                                      <i
+                           [style.color]="groupBackgroundColor"
+                           *ngIf="dialogRef"
+                           class="bi bi-x-lg hide-on-desktop-ipad-up"
+                           style="margin-left: 5px; cursor: pointer;"
+                           title="Close"
+                           (click)="closeDialog()"
+                           ></i>
+
+                            <i
+                           [style.color]="groupBackgroundColor"
+                           *ngIf="!isFullscreen"
+                           class="bi bi-fullscreen hide-on-desktop-ipad-up"
+                           style="margin-left: 5px; cursor: pointer;"
+                           (click)="goToFullscreen()"
+                           ></i>
+
+                           <i
+                           *ngIf="isFullscreen"
+                           class="bi bi-arrow-left hide-on-desktop-ipad-up"
+                           title="Return home"
+                           (click)="goBackHome()"
+                           ></i>
+
+                  <ng-container *ngIf="list?.name; else fallbackListId">
+                     List "<span style="font-weight: 500;">{{ list.name }}</span>" 
+                     <i class="bi bi-arrow-up-right-square"
+                        title="Export this list"
+                        style="cursor: pointer; font-size: 1.4rem;"
+                        (click)="onExportClicked()"></i>
+                  </ng-container>
+
+                  <ng-template #fallbackListId>
+                     List #{{ listId }}
+                  </ng-template>
+                  |
+                  <span style="font-size: 1.1rem;">
+                     <ng-container *ngIf="(items?.length || 0) > 0; else noActive">
+                        {{ items.length }} {{ items.length === 1 ? 'list item' : 'list items' }}
+                     </ng-container>
+                     <ng-template #noActive><i>No items</i></ng-template>
+
+
+
+                  </span>
+               </ng-template>
+            </ng-container>
+         </ng-template>
+      </h3>
+
+      <i
+      [style.color]="groupBackgroundColor"
+      *ngIf="!isFullscreen"
+      class="bi bi-fullscreen mobile-only-icon-styles hide-on-mobile-ipad"
+      style="position: relative; top: -12px; left: -25px; cursor: pointer;"
+      (click)="goToFullscreen()"
+      ></i>
+
+      <i
+      *ngIf="isFullscreen"
+      class="bi bi-arrow-left hide-on-mobile-ipad"
+      title="Return home"
+      style="position: relative; top: -12px; left: -25px; cursor: pointer; scale: 1.8;"
+      (click)="goBackHome()"
+      ></i>
+
+      <i
+      [style.color]="groupBackgroundColor"
+      *ngIf="dialogRef"
+      class="bi bi-x-lg close-icon mobile-only-icon-styles hide-on-mobile-ipad"
+      title="Close"
+      (click)="closeDialog()"
+      ></i>
+
+   </div>
+   <app-export-list
+   *ngIf="showExportPanel"
+   [listName]="list?.name || ('#' + listId)"
+   [items]="items"
+   [categories]="categories"
+   (closeExport)="onCloseExport()"
+   (confirmExport)="onConfirmExport()"
+   (exportOptionsValid)="isExportValid = $event"
+   ></app-export-list>
+   <div class="dialog-body-scroll" cdkScrollable>
+      <app-completed-list-items
+      *ngIf="showCompletedItems"
+      [listId]="listId || list?.id"
+      [styleSettings]="styleSettings"
+      (itemRestored)="onItemRestored($event)"
+      (countChanged)="completedItemCount = $event">
+      </app-completed-list-items>
+      <app-add-list-item
+      *ngIf="showNewItemForm"
+      [listId]="listId || list?.id"
+      [categories]="categories"
+      [styleSettings]="styleSettings"
+      [selectedCategoryId]="selectedCategoryId"
+      (itemCreated)="onItemCreated($event)"
+      #addListItemComponent>
+      </app-add-list-item>
+      <ng-container *ngIf="!isCategoryEditMode && !showNewItemForm && !showCompletedItems">
+         <div *ngIf="!loading && items.length === 0" class="mt-3" [style.color]="styleSettings.groupFontColor">
+         No items found.
+         <div (click)="setShowNewItemForm(true)"
+            style="text-decoration: underline; cursor: pointer; display: inline-block; margin-top: 4px;">
+            Click here to add a new list item
+         </div>
+   </div>
+   <div *ngIf="!loading && items.length > 0">
+   <app-tutorial-list [isSettingsComponent]="false"></app-tutorial-list>
+   <app-filter-list
+   [(filterText)]="filterText"
+   [(filterByName)]="filterByName"
+   [(filterByDescription)]="filterByDescription"
+   [(filterByCategory)]="filterByCategory"
+   [styleSettings]="styleSettings"
+   *ngIf="!showExportPanel"
+   />
+   <div class="test-group-list" [ngStyle]="{ 'background-color': styleSettings.groupBackgroundColor }" *ngIf="!showExportPanel">
+   <ng-container>
+   <div class="category-header" style="font-weight: bold; margin-top: 0px;" [style.color]="styleSettings.groupFontColor">
+   Pinned |
+   <span style="font-size: 0.90rem;">
+   <i>
+   {{ filteredGroupedTestItems['Pinned'].length }}
+   {{ filteredGroupedTestItems['Pinned'].length === 1 ? 'item' : 'items' }}
+   </i>
+   </span>
+   </div>
+   </ng-container>
+   <div cdkDropList id="Pinned" [cdkDropListData]="filteredGroupedTestItems['Pinned']"
+   [cdkDropListConnectedTo]="objectKeys(groupedTestItems)" class="link-list"
+   (cdkDropListDropped)="dropTestItem($event)">
+   <ng-container *ngIf="filteredGroupedTestItems['Pinned']?.length === 0">
+   <div class="empty-drop-placeholder" [style.color]="styleSettings.groupFontColor" [style.border-color]="styleSettings.groupFontColor">
+   Drop items here to pin them
+   </div>
+   </ng-container>
+   <div *ngFor="let item of filteredGroupedTestItems['Pinned']; let itemIndex = index" cdkDrag [cdkDragData]="item"
+   [cdkDragDisabled]="item.isEditing || item.showDetails ||anyItemDetailsVisible" class="link-item"
+   [class.highlightA]="item.highlightClass === 'highlightA'"
+   [class.highlightB]="item.highlightClass === 'highlightB'"
+   [ngStyle]="{
+   'border': item.pinned ? '2px dotted yellow' : '',
+   'background-color': styleSettings.linkBackgroundColor
+   }"
+   (click)="!item.isEditing && toggleDetails(item)">
+   <div *ngIf="item.isEditing" class="edit-form"
+   [ngStyle]="{ 'background-color': styleSettings.groupBackgroundColor }"
+   style="margin-top: 10px; padding: 10px; border-radius: 4px;">
+   <div style="margin-bottom: 8px;">
+   <input [(ngModel)]="item.tempName"
+   placeholder="Item Name"
+   class="form-control w-100" />
+   </div>
+   <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+   <select [(ngModel)]="item.tempPriority" class="form-select w-50">
+   <option value="High">🔴 High</option>
+   <option value="Medium">🟡 Medium</option>
+   <option value="Low">🟢 Low</option>
+   </select>
+   <select [(ngModel)]="item.tempCategoryName" class="form-select w-50">
+   <option *ngFor="let cat of categories" [value]="cat.name">{{ cat.name }}</option>
+   </select>
+   </div>
+   <textarea [(ngModel)]="item.tempDescription"
+   rows="4"
+   class="form-control w-100"
+   placeholder="Item description..."></textarea>
+   <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 10px;">
+   <button mat-button
+      (click)="onCancelEdit(item); $event.stopPropagation();"
+      style="color: white;">
+   Cancel
+   </button>
+   <button mat-button
+      (click)="onSaveEdit(item); $event.stopPropagation();"
+      style="color: white;">
+   Save
+   </button>
+   </div>
+</div>
+<div *ngIf="!item.isEditing" style="display: flex; flex-direction: column; width: 100%;">
+<div class="link-name-container"
+   style="display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: grab !important;">
+<div class="check-icon-wrapper" (mouseleave)="cancelConfirmComplete(item)">
+<i
+*ngIf="!item.confirmingComplete"
+class="bi bi-check-circle check-complete-icon"
+(click)="confirmComplete(item, $event)"
+title="Mark as complete"
+></i>
+
+<i
+*ngIf="item.confirmingComplete"
+class="bi bi-question-lg check-confirm-icon"
+(click)="onCompleteItem(item, $event)"
+title="Really complete item?"
+style="color: orange; cursor: pointer;"
+></i>
+
+</div>
+
+<span class="badge bg-info hide-on-mobile-ipad" style="font-size: 0.75rem;" style="position: relative; margin-right: 5px;">
+<span class="text-light" title="Pinned item number" style="font-weight: 500; color: rgb(51, 51, 51) !important;">1.{{ itemIndex + 1 }}</span>
+</span>
+
+
+<div style="flex: 1; display: flex; align-items: center; gap: 10px; overflow: hidden;">
+<span class="badge bg-secondary hide-on-mobile-ipad" style="font-size: 0.75rem;"
+   style="cursor: default !important;"
+   title="Date created.">
+{{ item.createdAt | date: 'shortDate' }}
+</span>
+
+
+<span
+(click)="togglePriorityPanel(item, $event); $event.stopPropagation()"
+class="priority-dot-main hide-on-mobile-ipad"
+[ngStyle]="{
+'background-color': getPriorityColor(item.tempPriority || '') || 'gray',
+'border-radius': '50%',
+'width': '10px',
+'height': '10px',
+'display': 'inline-block',
+'flex-shrink': '0',
+'cursor': 'pointer'
+}"
+[title]="'Priority: ' + item.priority + '. Click to change priority'"
+></span>
+
+<span
+(click)="togglePriorityPanel(item, $event); $event.stopPropagation()"
+class="priority-dot-main hide-on-desktop-ipad-up"
+style="position: relative; right: -2px !important;"
+[ngStyle]="{
+'background-color': getPriorityColor(item.tempPriority || '') || 'gray',
+'border-radius': '50%',
+'width': '10px',
+'height': '10px',
+'display': 'inline-block',
+'flex-shrink': '0',
+'cursor': 'pointer'
+}"
+[title]="'Priority: ' + item.priority + '. Click to change priority'"
+></span>
+
+
+<span
+   style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 100%; cursor: pointer !important;"
+   >
+<i
+*ngIf="item.tempDescription"
+class="bi bi-info-circle"
+title="This item has more info in the description."
+style="margin-right: 10px; color: #ccc; cursor: pointer;"
+(click)="$event.stopPropagation()"
+></i>
+<span class="item-name-hover">{{ item.name }}</span>
+</span>
+</div>
+<div style="display: flex; align-items: center; gap: 4px;">
+
+
+
+<div
+class="pin-icon-wrapper hide-on-mobile-ipad"
+(click)="onPinIconClick(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i [ngClass]="item.pinned ? 'bi bi-pin-angle' : 'bi bi-pin'" style="cursor: pointer;"></i>
+</div>
+
+<div
+class="pin-icon-wrapper hide-on-mobile-ipad"
+(click)="onEditItem(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i class="bi bi-pen" style="cursor: pointer;"></i>
+</div>
+
+
+
+<div
+class="pin-icon-wrapper"
+(click)="onDeleteItem(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i class="bi bi-x-lg" style="cursor: pointer;"></i>
+</div>
+</div>
+</div>
+<div
+*ngIf="item.showPriorityPanel"
+style="margin-top: 8px; display: flex; gap: 8px;"
+(click)="$event.stopPropagation()"
+>
+<div class="d-flex w-100 mt-2" (click)="$event.stopPropagation()">
+<div
+   class="alert alert-success flex-fill text-center py-2 m-1"
+   role="alert"
+   style="cursor: pointer; border: 2px solid #32cd32;"
+   (click)="setPriority(item, 'Low'); $event.stopPropagation()"
+   >
+<span class="priority-dot low"></span> Low
+</div>
+<div
+   class="alert alert-warning flex-fill text-center py-2 m-1"
+   role="alert"
+   style="cursor: pointer; border: 2px solid #ffd700;"
+   (click)="setPriority(item, 'Medium'); $event.stopPropagation()"
+   >
+<span class="priority-dot medium"></span> Medium
+</div>
+<div
+   class="alert alert-danger flex-fill text-center py-2 m-1"
+   role="alert"
+   style="cursor: pointer; border: 1px solid #ff0000;"
+   (click)="setPriority(item, 'High'); $event.stopPropagation()"
+   >
+<span class="priority-dot high"></span> High
+</div>
+</div>
+</div>
+<div *ngIf="item.showDetails" class="details-panel"
+style="margin-top: 10px; padding: 10px; border: 1px dotted white; border-radius: 4px; background-color: rgba(255,255,255,0.05); color: white; width: 100%; cursor: default !important;"
+(click)="$event.stopPropagation()">
+<strong>Title:</strong>&nbsp;
+
+
+
+<span style="white-space: pre-line;">{{ item.name }}</span><br/>
+
+<strong>Date</strong>: <span class="badge bg-secondary" style="font-size: 0.75rem;"
+   style="cursor: default !important;"
+   title="Date created.">
+{{ item.createdAt | date: 'shortDate' }}
+</span><br/>
+
+
+<span
+class="pin-icon-wrapper hide-on-desktop-ipad-up"
+(click)="onPinIconClick(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i [ngClass]="item.pinned ? 'bi bi-pin-angle' : 'bi bi-pin'" style="cursor: pointer;"></i> Pin 
+</span>
+<span
+class="pin-icon-wrapper hide-on-desktop-ipad-up"
+(click)="onEditItem(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i class="bi bi-pen" style="cursor: pointer;"></i> Edit
+</span>
+
+<hr style="margin-top: 8px; margin-bottom: 5px;">
+<strong>Description:</strong>&nbsp;
+<span style="white-space: pre-line;" *ngIf="!item.tempDescription"><i>No description
+entered.</i></span>
+<span style="white-space: pre-line;"
+   [innerHTML]="getSafeDescription(item.tempDescription) | autoLink"></span>
+</div>
+<div style="margin-top: 10px; display: flex; justify-content: flex-end;"
+   *ngIf="item.showDetails">
+<button mat-button (click)="item.showDetails = false; $event.stopPropagation()"
+   style="color: white;">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+<ng-container *ngFor="let category of objectKeys(filteredGroupedTestItems); let catIndex = index">
+<ng-container *ngIf="category !== 'Pinned'">
+<div class="category-header" style="font-weight: bold; margin-top: 16px;" [style.color]="styleSettings.groupFontColor">
+{{ category }} |
+<span *ngIf="filteredGroupedTestItems[category]?.length !== undefined">
+<i>
+{{ filteredGroupedTestItems[category].length }}
+{{ filteredGroupedTestItems[category].length === 1 ? 'item' : 'items' }}
+</i>
+<i
+   class="bi bi-plus-lg"
+   style="cursor: pointer;"
+   title="Add item here"
+   (click)="setShowNewItemFormWithCategory(category)"
+   ></i>
+</span>
+</div>
+<div cdkDropList [id]="category" [cdkDropListData]="filteredGroupedTestItems[category]"
+[cdkDropListConnectedTo]="objectKeys(groupedTestItems)" class="link-list"
+(cdkDropListDropped)="dropTestItem($event)">
+<div *ngIf="!filteredGroupedTestItems[category]?.length" class="empty-drop-placeholder" [style.color]="styleSettings.groupFontColor" [style.border-color]="styleSettings.groupFontColor">
+Drop items here
+</div>
+<div *ngFor="let item of filteredGroupedTestItems[category]; let itemIndex = index" cdkDrag [cdkDragData]="item"
+[cdkDragDisabled]="item.isEditing || item.showDetails || anyItemDetailsVisible"
+class="link-item" [class.highlightA]="item.highlightClass === 'highlightA'"
+[class.highlightB]="item.highlightClass === 'highlightB'" [class.highlight]="item.highlight"
+(click)="!item.isEditing && toggleDetails(item)" [ngStyle]="{
+'--link-bg-color': styleSettings.linkBackgroundColor,
+'background-color': styleSettings.linkBackgroundColor
+}">
+<div *ngIf="item.isEditing" class="edit-form"
+   style="margin-top: 10px; padding: 10px; border-radius: 4px; background-color: #2e3a46;">
+<div style="margin-bottom: 8px;">
+<input [(ngModel)]="item.tempName" placeholder="Item Name" class="form-control w-100" />
+</div>
+<div style="display: flex; gap: 8px; margin-bottom: 8px;">
+<select [(ngModel)]="item.tempPriority" class="form-select w-50">
+<option value="High">🔴 High</option>
+<option value="Medium">🟡 Medium</option>
+<option value="Low">🟢 Low</option>
+</select>
+<select [(ngModel)]="item.tempCategoryName" class="form-select w-50">
+<option *ngFor="let cat of categories" [value]="cat.name">{{ cat.name }}</option>
+</select>
+</div>
+<textarea [(ngModel)]="item.tempDescription" rows="4" class="form-control w-100"
+placeholder="Item description..."></textarea>
+<div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 10px;">
+<button mat-button (click)="onCancelEdit(item); $event.stopPropagation();" style="color: white;">Cancel</button>
+<button mat-button (click)="onSaveEdit(item); $event.stopPropagation()" style="color: white;">Save</button>
+</div>
+</div>
+<div *ngIf="!item.isEditing" style="display: flex; flex-direction: column; width: 100%;">
+<div class="link-name-container"
+   style="display: flex; justify-content: space-between; align-items: center; width: 100%; cursor: grab !important;">
+<div class="check-icon-wrapper" (mouseleave)="cancelConfirmComplete(item)">
+<i
+*ngIf="!item.confirmingComplete"
+class="bi bi-check-circle check-complete-icon"
+(click)="confirmComplete(item, $event)"
+title="Mark as complete"
+></i>
+<i
+*ngIf="item.confirmingComplete"
+class="bi bi-question-lg check-confirm-icon"
+(click)="onCompleteItem(item, $event)"
+title="Really complete item?"
+style="color: orange; cursor: pointer;"
+></i>
+</div>
+<span class="badge bg-info hide-on-mobile-ipad" style="font-size: 0.75rem;" style="position: relative; margin-right: 5px;">
+<span class="text-light" title="List item number" style="font-weight: 500; color: rgb(51, 51, 51) !important;">{{ catIndex }}.{{ itemIndex + 1 }}</span>
+</span>
+<div style="flex: 1; display: flex; align-items: center; gap: 10px; overflow: hidden;">
+<span class="badge bg-secondary hide-on-mobile-ipad" style="font-size: 0.75rem;"
+   style="cursor: default !important;"
+   title="Date created.">
+{{ item.createdAt | date: 'shortDate' }}
+</span>
+
+
+
+<span
+(click)="togglePriorityPanel(item, $event)"
+class="priority-dot-main hide-on-mobile-ipad"
+[ngStyle]="{
+'background-color': getPriorityColor(item.tempPriority || '') || 'gray',
+'border-radius': '50%',
+'width': '10px',
+'height': '10px',
+'display': 'inline-block',
+'flex-shrink': '0',
+'cursor': 'pointer'
+}"
+title="Click to change priority"
+></span>
+
+<span
+(click)="togglePriorityPanel(item, $event)"
+class="priority-dot-main hide-on-desktop-ipad-up"
+style="position: relative; right: -3px;"
+[ngStyle]="{
+'background-color': getPriorityColor(item.tempPriority || '') || 'gray',
+'border-radius': '50%',
+'width': '10px',
+'height': '10px',
+'display': 'inline-block',
+'flex-shrink': '0',
+'cursor': 'pointer'
+}"
+title="Click to change priority"
+></span>
+
+<span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; cursor: pointer !important;">
+<i
+*ngIf="item.tempDescription"
+class="bi bi-info-circle"
+title="This item has more info in the description."
+style="margin-right: 10px; color: #ccc; cursor: pointer;"
+(click)="$event.stopPropagation()"
+></i>
+<span class="item-name-hover">{{ item.name }}</span>
+</span>
+</div>
+<div style="display: flex; align-items: center; gap: 4px;">
+
+
+<div
+class="pin-icon-wrapper hide-on-mobile-ipad"
+(click)="onPinIconClick(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i [ngClass]="item.pinned ? 'bi bi-pin-angle' : 'bi bi-pin'" style="cursor: pointer;"></i>
+</div>
+<div
+class="pin-icon-wrapper hide-on-mobile-ipad"
+(click)="onEditItem(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i class="bi bi-pen" style="cursor: pointer;"></i>
+</div>
+
+
+<div
+class="pin-icon-wrapper"
+(click)="onDeleteItem(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i class="bi bi-x-lg" style="cursor: pointer;"></i>
+</div>
+</div>
+</div>
+<div
+*ngIf="item.showPriorityPanel"
+style="margin-top: 8px; display: flex; gap: 8px;"
+(click)="$event.stopPropagation()"
+>
+<div class="d-flex w-100 mt-2" (click)="$event.stopPropagation()">
+<div
+   class="alert alert-success flex-fill text-center py-2 m-1 priority-p"
+   role="alert"
+   style="cursor: pointer; border: 2px solid #32cd32;"
+   (click)="setPriority(item, 'Low'); $event.stopPropagation()"
+   >
+<span class="priority-dot low"></span> Low
+</div>
+<div
+   class="alert alert-warning flex-fill text-center py-2 m-1"
+   role="alert"
+   style="cursor: pointer; border: 2px solid #ffd700;"
+   (click)="setPriority(item, 'Medium'); $event.stopPropagation()"
+   >
+<span class="priority-dot medium"></span> Medium
+</div>
+<div
+   class="alert alert-danger flex-fill text-center py-2 m-1"
+   role="alert"
+   style="cursor: pointer; border: 1px solid #ff0000;"
+   (click)="setPriority(item, 'High'); $event.stopPropagation()"
+   >
+<span class="priority-dot high"></span> High
+</div>
+</div>
+</div>
+<div *ngIf="item.showDetails" class="details-panel"
+style="margin-top: 10px; padding: 10px; border: 1px dotted white; border-radius: 4px; background-color: rgba(255,255,255,0.05); color: white; width: 100%; cursor: default !important;"
+(click)="$event.stopPropagation()">
+<strong>Title:</strong>&nbsp;
+
+
+<span style="white-space: pre-line;">{{ item.name }}</span><br/>
+
+<strong>Date</strong>: <span class="badge bg-secondary" style="font-size: 0.75rem;"
+   style="cursor: default !important;"
+   title="Date created.">
+{{ item.createdAt | date: 'shortDate' }}
+</span><br/>
+
+<span
+class="pin-icon-wrapper hide-on-desktop-ipad-up"
+
+(click)="onPinIconClick(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i [ngClass]="item.pinned ? 'bi bi-pin-angle' : 'bi bi-pin'" style="cursor: pointer;"></i> Pin 
+</span>
+<span
+class="pin-icon-wrapper hide-on-desktop-ipad-up"
+(click)="onEditItem(item, $event)"
+[style.--group-background-color]="styleSettings.groupBackgroundColor"
+>
+<i class="bi bi-pen" style="cursor: pointer;"></i> Edit
+</span>
+
+<hr style="margin-top: 8px; margin-bottom: 5px;">
+<strong>Description:</strong>&nbsp;
+<span style="white-space: pre-line;" *ngIf="!item.tempDescription"><i>No description
+entered.</i></span>
+<span style="white-space: pre-line;"
+   [innerHTML]="getSafeDescription(item.tempDescription) | autoLink"></span>
+</div>
+<div style="margin-top: 10px; display: flex; justify-content: flex-end;"
+   *ngIf="item.showDetails">
+<button mat-button (click)="item.showDetails = false; $event.stopPropagation()"
+   style="color: white;">
+Close
+</button>
+</div>
+</div>
+</div>
+</div>
+</ng-container>
+</ng-container>
+</div>
+<div *ngIf="isFilterActiveAndEmpty" class="mt-3 text-light text-center">
+<i>No list items match your filter terms.</i>
+</div>
+</div>
+</ng-container>
+<app-manage-categories 
+*ngIf="isCategoryEditMode" 
+[listId]="listId || list?.id"
+[styleSettings]="styleSettings"
+[externalNewCategoryName]="newCategoryName" 
+(newCategoryNameChange)="newCategoryName = $event"
+(anyEditingChange)="anyCategoryEditing = $event" 
+(categoriesChanged)="onCategoriesChanged($event)"
+(categoryAddCompleted)="onCategoryAddCompleted()" 
+(categoryAdded)="onCategoryAdded()"
+(categoryDeleted)="onCategoryDeleted()"
+[testItems]="testItems">
+</app-manage-categories>
+</div>
+<div class="p-3">
+   <ng-container *ngIf="isCategoryEditMode">
+      <div class="d-flex justify-content-between align-items-center">
+         <div>
+            <button mat-button color="warn"
+            (click)="toggleCategoryEditMode()"
+            [style.color]="styleSettings.groupFontColor"
+            [disabled]="anyCategoryEditing"
+            [style.color]="anyCategoryEditing ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+            Return
+            </button>
+         </div>
+         <div class="d-flex gap-2">
+            <button mat-button color="primary" (click)="manageCategoriesComponent.addCategory(true)"
+            [disabled]="!newCategoryName.trim() || anyCategoryEditing"
+            [style.color]="!newCategoryName.trim() || anyCategoryEditing ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+            Save & Add Another
+            </button>
+            <button mat-button color="primary" (click)="manageCategoriesComponent.addCategory(false)"
+            [disabled]="!newCategoryName.trim() || anyCategoryEditing"
+            [style.color]="!newCategoryName.trim() || anyCategoryEditing ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+            Add Category
+            </button>
+         </div>
+      </div>
+   </ng-container>
+   <ng-container *ngIf="!isCategoryEditMode">
+      <div class="d-flex justify-content-between align-items-center w-100">
+         <ng-container *ngIf="!showCompletedItems && !showNewItemForm && !showExportPanel">
+            <button mat-button (click)="showCompletedItems = true"
+            [style.color]="styleSettings.groupFontColor">
+            Completed list items
+            </button>
+         </ng-container>
+         <ng-container *ngIf="showCompletedItems">
+            <div class="d-flex align-items-center w-100 justify-content-between">
+               <div>
+                  <button mat-button (click)="showCompletedItems = false"
+                  [style.color]="styleSettings.groupFontColor">
+                  Return
+                  </button>
+               </div>
+               <div>
+                  <button mat-button (click)="onRestoreAllItems()"
+                  [style.color]="!completedListComponent?.items?.length ? 'gray' : styleSettings.groupFontColor"
+                  [disabled]="!completedListComponent?.items?.length">
+                  Restore All List Items
+                  </button>
+               </div>
+            </div>
+         </ng-container>
+         <ng-container *ngIf="showNewItemForm">
+            <button mat-button color="warn"
+            (click)="showNewItemForm = false; newTitle=''; newDescription='';"
+            [style.color]="styleSettings.groupFontColor">
+            Return
+            </button>
+         </ng-container>
+         <ng-container *ngIf="showExportPanel">
+            <div class="d-flex justify-content-between align-items-center w-100">
+               <button mat-button (click)="onCloseExport()" [style.color]="styleSettings.groupFontColor">
+               Return
+               </button>
+               <button
+               mat-button
+               (click)="onConfirmExport()"
+               [disabled]="!isExportValid"
+               [style.color]="isExportValid ? styleSettings.groupFontColor : 'gray'">
+               Export list
+               </button>
+            </div>
+         </ng-container>
+         <div class="d-flex gap-2">
+            <ng-container *ngIf="!showCompletedItems">
+               <ng-container *ngIf="showNewItemForm">
+                  <button mat-button color="primary" (click)="addListItemComponent?.submit(true)"
+                  [disabled]="!addListItemComponent || !addListItemComponent.newTitle.trim()"
+                  [style.color]="!(addListItemComponent?.newTitle || '').trim() ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+                  Save & Add Another
+                  </button>
+                  <button mat-button color="primary" (click)="addListItemComponent?.submit(false)"
+                  [disabled]="!addListItemComponent || !addListItemComponent.newTitle.trim()"
+                  [style.color]="!(addListItemComponent?.newTitle || '').trim() ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+                  Add
+                  </button>
+               </ng-container>
+               <ng-container *ngIf="!showNewItemForm && !showExportPanel">
+                  <button mat-button (click)="toggleCategoryEditMode()" [disabled]="anyItemEditing"
+                  [style.color]="anyItemEditing ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+                  Manage Categories
+                  </button>
+                  <button mat-button (click)="setShowNewItemForm(true)" [disabled]="anyItemEditing"
+                  [style.color]="anyItemEditing ? styleSettings.linkBackgroundColor : styleSettings.groupFontColor">
+                  <i class="bi bi-plus-lg"></i> Add New List Item
+                  </button>
+               </ng-container>
+            </ng-container>
+         </div>
+      </div>
+   </ng-container>
+</div>
+</div>

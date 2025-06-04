@@ -1,0 +1,8 @@
+<mat-dialog-content style="display: flex; flex-direction: column; height: 100%; position: relative;">
+   <h3 mat-dialog-title *ngIf="data.title" class="pb-2">{{ data.title }}</h3>
+   <p>{{ data.message }}</p>
+</mat-dialog-content>
+<mat-dialog-actions class="justify-content-end mb-1" style="margin-right: 8px; margin-left: 8px;">
+   <button mat-button (click)="onCancel()">Cancel</button>
+   <button mat-button color="warn" (click)="onConfirm()">Delete</button>
+</mat-dialog-actions>

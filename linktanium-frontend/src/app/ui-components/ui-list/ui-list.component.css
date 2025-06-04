@@ -1,0 +1,95 @@
+.custom-list-icon {
+	position: relative;
+	padding-left: 24px;
+	color: white;
+	padding: 4px 6px;
+	cursor: pointer !important;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+	transition: background-color 0.2s ease-in-out;
+	margin-bottom: 0px;
+}
+
+.list-name {
+	width: 20% !important;
+}
+
+.custom-list-icon i.bi {
+	font-size: 16px;
+	color: #aaa;
+	flex-shrink: 0;
+}
+
+.custom-list-icon .list-name {
+	flex-grow: 1;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	text-align: left;
+}
+
+.custom-list-icon .menu-trigger {
+	background: none;
+	border: none;
+	padding: 0;
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0;
+	transition: opacity 0.2s ease-in-out;
+}
+
+.custom-list-icon:hover .menu-trigger {
+	opacity: 1;
+}
+
+.link-menu-icon {
+	cursor: pointer;
+	font-size: 16px;
+	color: #888;
+	opacity: 0;
+}
+
+.link-menu-icon:hover {
+	color: #a1a1a1;
+	opacity: 1;
+}
+
+.custom-list-icon:hover .link-menu-icon {
+	opacity: 0.7;
+}
+
+.menu-trigger:hover .link-menu-icon {
+	opacity: 1;
+}
+
+.list-hover {
+	cursor: pointer;
+}
+
+.list-hover:hover {
+	text-decoration: underline;
+}
+
+.list-drag-handle {
+	cursor: grab;
+	font-size: 16px;
+	color: #aaa;
+	opacity: 0;
+	transform: scale(0.8);
+	pointer-events: none;
+	transition: opacity 0.1s ease, transform 0.1s ease;
+}
+
+.handles-visible .list-drag-handle {
+	opacity: 1;
+	transform: scale(1);
+	pointer-events: auto;
+}
+
+.list-drag-handle:hover {
+	color: #777;
+}

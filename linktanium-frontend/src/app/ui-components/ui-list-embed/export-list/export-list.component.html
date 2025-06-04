@@ -1,0 +1,40 @@
+<div class="text-light p-4">
+   <div class="form-check mb-2" style="cursor: pointer;">
+      <input
+      class="form-check-input"
+      type="checkbox"
+      id="exportTitle"
+      [(ngModel)]="exportTitle"
+      (change)="onExportOptionChange()"
+      [disabled]="justExportItems"
+      />
+      <label class="form-check-label" for="exportTitle" style="cursor: pointer;">
+      Export all list items with list title
+      </label>
+   </div>
+   <div class="form-check mb-2" style="cursor: pointer;">
+      <input
+      class="form-check-input"
+      type="checkbox"
+      id="exportCategories"
+      [(ngModel)]="exportCategories"
+      (change)="onExportOptionChange()"
+      [disabled]="justExportItems"
+      />
+      <label class="form-check-label" for="exportCategories" style="cursor: pointer;">
+      Export all list items organized by category
+      </label>
+   </div>
+   <div class="form-check" style="cursor: pointer;">
+      <input
+      class="form-check-input"
+      type="checkbox"
+      id="justExportItems"
+      [(ngModel)]="justExportItems"
+      (change)="onJustExportItemsChanged()"
+      />
+      <label class="form-check-label" for="justExportItems" style="cursor: pointer;">
+      Only export the list items
+      </label>
+   </div>
+</div>

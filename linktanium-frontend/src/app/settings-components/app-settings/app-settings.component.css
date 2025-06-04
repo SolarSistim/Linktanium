@@ -1,0 +1,23 @@
+.button-panel {
+	background-color: #3b4d59;
+	padding: 15px;
+	border-radius: 3px;
+}
+
+.nav-button {
+	background-color: #2e3a46;
+	text-align: left;
+	color: white;
+}
+
+.nav-button-disabled {
+	background-color: #2e3a46;
+	text-align: left;
+	color: gray;
+}
+
+.upload-button {
+	background-color: #3b4d59;
+	text-align: left;
+	color: white;
+}
