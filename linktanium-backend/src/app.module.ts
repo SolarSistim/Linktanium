@@ -20,7 +20,7 @@ import { ListsModule } from './lists/lists.module';
   imports: [
     TypeOrmModule.forRoot({
       type: 'sqlite',
-      database: 'quickdash.db',
+      database: 'linktanium.db',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),

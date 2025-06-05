@@ -47,34 +47,34 @@ export class ImportExportController {
     @InjectRepository(Icon) private iconRepo: Repository<Icon>
   ) {}
 
-  private readonly DB_PATH = path.join(process.cwd(), "quickdash.db");
+  private readonly DB_PATH = path.join(process.cwd(), "linktanium.db");
   private readonly EXPORT_DIRS = [
     {
       name: "branding/favicon",
       path: path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/branding/favicon"
+        "../linktanium-frontend/public/assets/branding/favicon"
       ),
     },
     {
       name: "branding/logo",
       path: path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/branding/logo"
+        "../linktanium-frontend/public/assets/branding/logo"
       ),
     },
     {
       name: "icons",
       path: path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/icons"
+        "../linktanium-frontend/public/assets/icons"
       ),
     },
     {
       name: "theme/background",
       path: path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/theme/background"
+        "../linktanium-frontend/public/assets/theme/background"
       ),
     },
   ];
@@ -93,12 +93,12 @@ export class ImportExportController {
 
     res.set({
       "Content-Type": "application/zip",
-      "Content-Disposition": "attachment; filename=quickdash-backup.zip",
+      "Content-Disposition": "attachment; filename=linktanium-backup.zip",
     });
 
     archive.pipe(res);
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "quickdash-export-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "linktanium-export-"));
 
     const linkData = await this.linkRepo.find({ relations: ["group", "tags"] });
     const linkCategoryData = await this.categoryRepo.find();
@@ -202,7 +202,7 @@ export class ImportExportController {
 
         const filePath = path.join(tempDir, `${table.name}.csv`);
         fs.writeFileSync(filePath, csv);
-        archive.file(filePath, { name: `quickdash-backup/${table.name}.csv` });
+        archive.file(filePath, { name: `linktanium-backup/${table.name}.csv` });
       } catch (err) {
         console.error(`❌ Failed to export ${table.name}:`, err);
       }
@@ -210,7 +210,7 @@ export class ImportExportController {
 
     for (const dir of this.EXPORT_DIRS) {
       if (fs.existsSync(dir.path)) {
-        archive.directory(dir.path, `quickdash-backup/${dir.name}`);
+        archive.directory(dir.path, `linktanium-backup/${dir.name}`);
       } else {
         console.warn(`⚠️ Missing asset directory: ${dir.path}`);
       }
@@ -255,7 +255,7 @@ export class ImportExportController {
       .pipe(unzipper.Extract({ path: tempDir }))
       .promise();
 
-    const folder = path.join(tempDir, "quickdash-backup");
+    const folder = path.join(tempDir, "linktanium-backup");
 
     await this.linkRepo.clear();
     await this.categoryRepo.clear();
@@ -363,27 +363,27 @@ export class ImportExportController {
 
     copyDir(
       path.join(folder, "icons"),
-      path.resolve(process.cwd(), "../quickdash-frontend/public/assets/icons")
+      path.resolve(process.cwd(), "../linktanium-frontend/public/assets/icons")
     );
     copyDir(
       path.join(folder, "branding/favicon"),
       path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/branding/favicon"
+        "../linktanium-frontend/public/assets/branding/favicon"
       )
     );
     copyDir(
       path.join(folder, "branding/logo"),
       path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/branding/logo"
+        "../linktanium-frontend/public/assets/branding/logo"
       )
     );
     copyDir(
       path.join(folder, "theme/background"),
       path.resolve(
         process.cwd(),
-        "../quickdash-frontend/public/assets/theme/background"
+        "../linktanium-frontend/public/assets/theme/background"
       )
     );
 

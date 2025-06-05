@@ -1,5 +1,5 @@
 {
-  "name": "quickdash-backend",
+  "name": "linktanium-backend",
   "version": "0.0.1",
   "description": "",
   "author": "",
@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
 "scripts": {
   "build": "nest build",
-  "build:all": "cd ../quickdash-frontend && npm run build -- --configuration production && cd ../quickdash-backend && npm run build",
+  "build:all": "cd ../linktanium-frontend && npm run build -- --configuration production && cd ../linktanium-backend && npm run build",
   "start": "cross-env NODE_ENV=development nest start",
   "start:dev": "cross-env NODE_ENV=development nest start --watch",
   "start:debug": "cross-env NODE_ENV=development nest start --debug --watch",
