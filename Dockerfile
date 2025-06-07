@@ -28,8 +28,9 @@ WORKDIR /app
 # Install runtime + build tools (temporarily)
 RUN apk add --no-cache sqlite-libs python3 make g++ py3-setuptools
 
-# Copy built frontend
-COPY --from=frontend-builder /app/frontend/dist/frontend /app/frontend
+# Copy built frontend - MODIFIED LINE HERE
+# We are now copying the *contents* of the 'browser' directory directly into /app/backend/frontend
+COPY --from=frontend-builder /app/frontend/dist/frontend/browser /app/backend/frontend
 
 # Copy backend, including node_modules
 COPY --from=backend-builder /app/backend /app/backend
@@ -57,7 +58,9 @@ ENV BACKGROUND_PATH=/app/frontend/assets/theme/background
 ENV ICON_PATH=/app/frontend/assets/icons
 
 # Start backend
-CMD ["/bin/sh", "-c", "cd backend && npm run start:prod"]
-
-
-
+CMD ["/bin/sh", "-c", "\
+  if [ ! -f /app/data/frontend/index.html ]; then \
+    echo 'Copying frontend build to /app/data/frontend...'; \
+    mkdir -p /app/data/frontend && cp -r /app/backend/frontend/* /app/data/frontend/; \
+  fi && \
+  cd /app/backend && npm run start:prod"]
